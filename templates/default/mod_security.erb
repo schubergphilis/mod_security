@@ -1,0 +1,19 @@
+
+<IfModule security2_module>
+# Sensible defaults
+
+# MS 2.5.x workaround for variable issue in modsecurity_crs_20_protocol_violations 
+# using a variable that was changed in MS 2.6.x
+#SetEnvIf REQBODY_PROCESSOR_ERROR (.*) REQBODY_ERROR=$1
+#SetEnv REQBODY_ERROR foo
+
+
+# wildcard the mod_security settings file so that apache doesn't break if missing
+Include <%= "#{node[:mod_security][:crs][:rules_root_dir]}/modsecurity_crs_*.conf" %>
+# core rule sets that have been activated
+Include <%= "#{node[:mod_security][:crs][:activated_rules]}/*.conf" %>
+        
+# user crafted rules
+Include <%= "#{node[:apache][:dir]}/mod_security/rules/*.conf" %>
+
+</IfModule>
