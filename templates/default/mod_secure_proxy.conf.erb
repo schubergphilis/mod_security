@@ -1,0 +1,13 @@
+<VirtualHost *:80>
+  ServerName <%= @params[:server_name] %>
+
+  <Proxy *>
+    Order deny,allow
+    Allow from all
+  </Proxy>
+
+  ProxyRequests Off
+  ProxyPass / http://<%= @params[:server_name] %>/
+  ProxyPassReverse / http://<%= @params[:server_name] %>/
+</VirtualHost>
+
