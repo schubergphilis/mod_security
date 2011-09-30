@@ -23,7 +23,22 @@ default[:mod_security][:crs][:rules_root_dir]  = "#{node[:mod_security][:crs][:r
 default[:mod_security][:crs][:activated_rules] = "#{node[:mod_security][:crs][:rules_root_dir]}/activated_rules"
 
 ##########
-# RULES!
+# Base Configuration
+##########
+default[:mod_security][:rule_engine]           = "DetectionOnly"
+# "On" to actively block
+default[:mod_security][:request_body_access]   = "On"
+# allow mod_security to access request bodies
+
+default[:mod_security][:response_body_access]  = "On"
+# allow mod_security to access response bodies
+
+# FIXME: add more options
+#default[:mod_security][:]       = "On"
+
+
+##########
+# OWASP Core Rule Set - RULES!
 ##########
 
 # Base rules.  These should be relatively safe
