@@ -25,15 +25,17 @@ There are 2 main use cases right now:
 * Set it to install the default recipe
 * Create a cookbook to reverse proxy to your real server sorta like
   this:
-  
+<pre>  
 mod_secure_proxy "my_site" do
   server_name "www.mysite.com"
   enable_https true # if you want to proxy https too
 end
-
+</pre>
 * Set your local /etc/hosts (or equiv.) file to have that server's IP
   look like your site
 * Test to your heart's content.
+* Look at /var/log/modsec.log and see what you could be blocking
+* Change the "DetectOnly" attribute to "On" and test some more
 
 Requirements
 ============
