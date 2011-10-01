@@ -1,0 +1,33 @@
+{
+  "dependencies": {
+    "build-essential": ">= 0.0.0",
+    "apache2": ">= 0.0.0"
+  },
+  "name": "mod_security",
+  "maintainer_email": "jro@honeyapps.com",
+  "attributes": {
+  },
+  "license": "Apache 2.0",
+  "suggestions": {
+  },
+  "platforms": {
+    "debian": ">= 0.0.0",
+    "ubuntu": ">= 0.0.0"
+  },
+  "maintainer": "HoneyApps Inc.",
+  "long_description": "Description\n===========\n\nRequirements\n============\n\n## Cookbooks\n\nThis cookbook depends on apache2 and build-essential\n\n## Platforms\n\n* Ubuntu (tested on 10.04)\n* Debian\n* more soon.\n\nAttributes\n==========\n\nRecipes\n=======\n\ndefault\n-------\n\ninstall_base\n------------\n\ninstall_owasp_core_rule_set\n---------------------------\n\nChanges\n=======\n\nLicense and Authors\n===================\n\nAuthor:: Jason Rohwedder <jro@honeyapps.com>\n\nCopyright:: 2011, HoneyApps, Inc\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
+  "version": "0.0.1",
+  "recommendations": {
+  },
+  "recipes": {
+  },
+  "groupings": {
+  },
+  "conflicting": {
+  },
+  "replacing": {
+  },
+  "description": "Installs mod_security for Apache2",
+  "providing": {
+  }
+}
