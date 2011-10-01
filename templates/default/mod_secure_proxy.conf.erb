@@ -11,3 +11,23 @@
   ProxyPassReverse / http://<%= @params[:server_name] %>/
 </VirtualHost>
 
+<% if @params[:enable_https] %>
+<VirtualHost *:443>
+  ServerName <%= @params[:server_name] %>
+  SSLProxyEngine on
+
+  <Proxy *>
+    Order deny,allow
+    Allow from all
+  </Proxy>
+
+  ProxyRequests Off
+  ProxyPass / https://<%= @params[:server_name] %>/
+  ProxyPassReverse / https://<%= @params[:server_name] %>/
+
+  # SSL settings
+  SSLEngine on
+  SSLCertificateFile      <%= node[:mod_security][:dir] %>/ssl/server.crt
+  SSLCertificateKeyFile   <%= node[:mod_security][:dir] %>/ssl/server.key
+</VirtualHost>
+<% end %>
