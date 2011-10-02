@@ -25,10 +25,16 @@ default[:mod_security][:crs][:activated_rules] = "#{node[:mod_security][:crs][:r
 ##########
 # Base Configuration
 ##########
-default[:mod_security][:rule_engine]           = "DetectionOnly"
+default[:mod_security][:rule_engine]                  = "DetectionOnly"
 # "On" to actively block
-default[:mod_security][:request_body_access]   = "On"
+default[:mod_security][:request_body_access]          = "On"
 # allow mod_security to access request bodies
+default[:mod_security][:request_body_limit]           = "13107200"
+default[:mod_security][:request_body_no_files_limit]  = "131072"
+default[:mod_security][:request_body_in_memory_limit] = "131072"
+default[:mod_security][:request_body_limit_action]    = "Reject"
+default[:mod_security][:pcre_match_limit]             = "1000"
+default[:mod_security][:pcre_match_limit_recursion]   = "1000"
 
 default[:mod_security][:response_body_access]  = "On"
 # allow mod_security to access response bodies

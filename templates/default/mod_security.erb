@@ -30,21 +30,21 @@ SecRule REQUEST_HEADERS:Content-Type "text/xml" \
 # to the size of data, with files excluded. You want to keep that value as
 # low as practical.
 #
-SecRequestBodyLimit 13107200
-SecRequestBodyNoFilesLimit 131072
+SecRequestBodyLimit <%= node[:mod_security][:request_body_limit] %>
+SecRequestBodyNoFilesLimit <%= node[:mod_security][:request_body_no_files_limit] %>
 
 # Store up to 128 KB of request body data in memory. When the multipart
 # parser reachers this limit, it will start using your hard disk for
 # storage. That is slow, but unavoidable.
 #
-SecRequestBodyInMemoryLimit 131072
+SecRequestBodyInMemoryLimit <%= node[:mod_security][:request_body_in_memory_limit] %>
 
 # What do do if the request body size is above our configured limit.
 # Keep in mind that this setting will automatically be set to ProcessPartial
 # when SecRuleEngine is set to DetectionOnly mode in order to minimize
 # disruptions when initially deploying ModSecurity.
 #
-SecRequestBodyLimitAction Reject
+SecRequestBodyLimitAction <%= node[:mod_security][:request_body_limit_action] %>
 
 # Verify that we've correctly processed the request body.
 # As a rule of thumb, when failing to process a request body
@@ -82,8 +82,8 @@ SecRule MULTIPART_UNMATCHED_BOUNDARY "!@eq 0" \
 # PCRE Tuning
 # We want to avoid a potential RegEx DoS condition
 #
-SecPcreMatchLimit 1000
-SecPcreMatchLimitRecursion 1000
+SecPcreMatchLimit <%= node[:mod_security][:pcre_match_limit] %>
+SecPcreMatchLimitRecursion <%= node[:mod_security][:pcre_match_limit_recursion] %>
 
 # Some internal errors will set flags in TX and we will need to look for these.
 # All of these are prefixed with "MSC_".  The following flags currently exist:
