@@ -27,6 +27,7 @@ default[:mod_security][:crs][:activated_rules] = "#{node[:mod_security][:crs][:r
 ##########
 default[:mod_security][:rule_engine]                  = "DetectionOnly"
 # "On" to actively block
+
 default[:mod_security][:request_body_access]          = "On"
 # allow mod_security to access request bodies
 default[:mod_security][:request_body_limit]           = "13107200"
@@ -36,8 +37,12 @@ default[:mod_security][:request_body_limit_action]    = "Reject"
 default[:mod_security][:pcre_match_limit]             = "1000"
 default[:mod_security][:pcre_match_limit_recursion]   = "1000"
 
-default[:mod_security][:response_body_access]  = "On"
+default[:mod_security][:response_body_access]         = "On"
 # allow mod_security to access response bodies
+default[:mod_security][:response_body_mime_type]      = "text/plain text/html text/xml"
+default[:mod_security][:response_body_limit]          = "524288"
+default[:mod_security][:response_body_limit_action]   = "ProcessPartial"
+
 
 # FIXME: add more options
 #default[:mod_security][:]       = "On"
