@@ -85,8 +85,8 @@ Changes
 =======
 
 * 0.0.2 
-** upgrade to mod_security 2.6.2
-** flesh out main config options as chef attributes
+ * upgrade to mod_security 2.6.2
+ * flesh out main config options as chef attributes
 * 0.0.1 First release
 
 License and Authors
