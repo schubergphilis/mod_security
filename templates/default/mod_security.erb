@@ -169,17 +169,17 @@ SecDataDir <%= node[:mod_security][:data_dir] %>
 # trigger a server error (determined by a 5xx or 4xx, excluding 404,  
 # level response status codes).
 #
-SecAuditEngine RelevantOnly
-SecAuditLogRelevantStatus "^(?:5|4(?!04))"
+SecAuditEngine <%= node[:mod_security][:audit_engine] %>
+SecAuditLogRelevantStatus <%= node[:mod_security][:audit_log_relevant_status] %>
 
 # Log everything we know about a transaction.
-SecAuditLogParts ABIJDEFHZ
+SecAuditLogParts <%= node[:mod_security][:audit_log_parts] %>
 
 # Use a single file for logging. This is much easier to look at, but
 # assumes that you will use the audit log only ocassionally.
 #
-SecAuditLogType Serial
-SecAuditLog /var/log/modsec_audit.log
+SecAuditLogType <%= node[:mod_security][:audit_log_type] %>
+SecAuditLog <%= node[:mod_security][:audit_log] %>
 
 # Specify the path for concurrent audit logging.
 #SecAuditLogStorageDir /opt/modsecurity/var/audit/
@@ -190,13 +190,13 @@ SecAuditLog /var/log/modsec_audit.log
 # separator. There's probably only one application somewhere that uses
 # something else so don't expect to change this value.
 #
-SecArgumentSeparator &
+SecArgumentSeparator <%= node[:mod_security][:argument_separator] %>
 
 # Settle on version 0 (zero) cookies, as that is what most applications
 # use. Using an incorrect cookie version may open your installation to
 # evasion attacks (against the rules that examine named cookies).
 #
-SecCookieFormat 0
+SecCookieFormat <%= node[:mod_security][:cookie_format] %>
 
 
 ######

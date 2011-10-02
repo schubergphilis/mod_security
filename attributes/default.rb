@@ -47,10 +47,19 @@ default[:mod_security][:response_body_limit_action]   = "ProcessPartial"
 default[:mod_security][:tmp_dir]                      = "/tmp/"
 default[:mod_security][:data_dir]                     = "/tmp/" # Persistent data
 
+# audit log attributes
+default[:mod_security][:audit_engine]                 = "RelevantOnly"
+default[:mod_security][:audit_log_relevant_status]    = '"^(?:5|4(?!04))"' #string within a string
+default[:mod_security][:audit_log_parts]              = "ABIJDEFHZ"
+default[:mod_security][:audit_log_type]               = "Serial"
+default[:mod_security][:audit_log]                    = "/var/log/modsec_audit.log"
+# FIXME: add support concurrent audit logging
 
-# FIXME: add more optionsx
-#default[:mod_security][:]       = "On"
-
+# misc attributes
+# url-encoding seperator.
+default[:mod_security][:argument_separator]           = "&"
+# there are multiple cookie format versions?
+default[:mod_security][:cookie_format]                = "0"
 
 ##########
 # OWASP Core Rule Set - RULES!
