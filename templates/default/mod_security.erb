@@ -127,13 +127,13 @@ SecResponseBodyLimitAction <%= node[:mod_security][:request_body_limit_action] %
 # This default setting is chosen due to all systems have /tmp available however, 
 # this is less than ideal. It is recommended that you specify a location that's private.
 #
-SecTmpDir /tmp/
+SecTmpDir <%= node[:mod_security][:tmp_dir] %>
 
 # The location where ModSecurity will keep its persistent data.  This default setting 
 # is chosen due to all systems have /tmp available however, it
 # too should be updated to a place that other users can't access.
 #
-SecDataDir /tmp/
+SecDataDir <%= node[:mod_security][:data_dir] %>
 
 # -- File uploads handling configuration -------------------------------------
 

@@ -43,8 +43,12 @@ default[:mod_security][:response_body_mime_type]      = "text/plain text/html te
 default[:mod_security][:response_body_limit]          = "524288"
 default[:mod_security][:response_body_limit_action]   = "ProcessPartial"
 
+# best to set these to a more private directory for long term use
+default[:mod_security][:tmp_dir]                      = "/tmp/"
+default[:mod_security][:data_dir]                     = "/tmp/" # Persistent data
 
-# FIXME: add more options
+
+# FIXME: add more optionsx
 #default[:mod_security][:]       = "On"
 
 
