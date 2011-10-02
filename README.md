@@ -84,6 +84,8 @@ install_owasp_core_rule_set
 Changes
 =======
 
+* 0.0.2 <in progress>
+** upgrade to mod_secure 2.6.2
 * 0.0.1 First release
 
 License and Authors

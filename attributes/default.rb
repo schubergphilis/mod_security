@@ -9,9 +9,9 @@ end
 
 # mod_security locations
 default[:mod_security][:from_source]           = true
-default[:mod_security][:source_version]        = "2.6.1"
+default[:mod_security][:source_version]        = "2.6.2"
 default[:mod_security][:source_file]           = "modsecurity-apache_#{node[:mod_security][:source_version]}.tar.gz"
-default[:mod_security][:source_checksum]       = "762d2d1fcd47dd0d348bea737a956dac" # SEEMS TO IGNORE? FIXME
+default[:mod_security][:source_checksum]       = "dfffdf21d15e8d0d300d970a74b02bd2" # SEEMS TO IGNORE? FIXME
 default[:mod_security][:source_dl_server]      = "http://downloads.sourceforge.net/project/mod-security/modsecurity-apache/"
 default[:mod_security][:source_dl_url]         = "#{node[:mod_security][:source_dl_server]}#{node[:mod_security][:source_version]}/#{node[:mod_security][:source_file]}"
 default[:mod_security][:rules]                 = "#{node[:mod_security][:dir]}/rules"
