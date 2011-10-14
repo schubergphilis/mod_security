@@ -1,18 +1,31 @@
-%w[libapr1 libaprutil1 libpcre3 libxml2 libcurl3].each do |p|
-  package p
+# install package common to package and source install
+case node[:platform]
+when "redhat","centos","scientific","fedora","suse"
+  packages = %w[apr apr-util pcre curl]
+when "ubuntu","debian"
+  packages = %w[libapr1 libaprutil1 libpcre3 libxml2 libcurl3]
+when "arch"
+  # OH NOES!
 end
+packages.each {|p| package p}
 
-# ignoring lua for right now
-# make optional?
+# FIXME: ignoring lua for right now
+# make optional in the future
 
 if node[:mod_security][:from_source]
   # COMPILE FROM SOURCE
   
-  # install required libs
-  %w[build-essential apache2-dev libxml2-dev libcurl3-dev].each do |p|
-    package p
+  #install required libs
+  case node[:platform]
+  when "redhat","centos","scientific","fedora","suse"
+    packages = %w[pcre-devel httpd-devel libxml2-devel curl-devel]
+  when "ubuntu","debian"
+    packages = %w[apache2-dev libxml2-dev libcurl3-dev]
+  when "arch"
+    # OH NOES!
   end
-
+  packages.each {|p| package p}
+  
   directory "#{node[:mod_security][:dir]}/source" do
     recursive true
   end
@@ -22,7 +35,7 @@ if node[:mod_security][:from_source]
     action :create_if_missing
     source node[:mod_security][:source_dl_url]
     mode "0644"
-    #checksum node[:mod_security][:source_checksum] seems to ignore? FIXME
+    #checksum node[:mod_security][:source_checksum] seems to get ignored? FIXME
     backup false
   end
 
@@ -40,30 +53,29 @@ if node[:mod_security][:from_source]
     subscribes :run, resources(:remote_file => source_code), :immediately
   end
 
-  template "/etc/apache2/mods-available/mod-security.load" do
+  # setup apache module loading
+  apache_module "unique_id"
+  # we have to manage our own loading
+  template "#{node[:apache][:dir]}/mods-enabled/mod-security.load" do
     owner node[:apache][:user]
     group node[:apache][:group]
     mode 0644
-    backup false
+    #backup false
     notifies :restart, resources(:service => "apache2"), :delayed
   end
-
-  apache_module "mod-security" 
-
+  
 else
   # INSTALL FROM PACKAGE
   
-  package "libapache-mod-security" do
-    action :install
+  case node[:platform]
+  when "redhat","centos","scientific","fedora","suse"
+    package "mod_security"
+  when "ubuntu","debian"
+    package "libapache-mod-security"
+  when "arch"
+    # OH NOES!
   end
 end
-
-# installing via deb seems enable mod unique id.  
-# will also need to adjust to offer from source compile.  that'll likely be the default
-# from source will probably have to enable the mod_unique_id via some apache2 call.  maybe makes sense to try to enable that way no matter what?
-
-apache_module "unique_id"
-apache_module "mod-security"
 
 directory "#{node[:mod_security][:rules]}" do
   recursive true
@@ -78,5 +90,3 @@ template "mod_security" do
   backup false
   notifies :restart, resources(:service => "apache2")
 end
-
-
