@@ -1,5 +1,6 @@
 <VirtualHost *:80>
   ServerName <%= @params[:server_name] %>
+  ServerAlias <%= @params[:server_name] %>.local <%= @params[:server_aliases].join(' ') if @params[:server_aliases] %>
 
   <Proxy *>
     Order deny,allow
@@ -14,6 +15,7 @@
 <% if @params[:enable_https] %>
 <VirtualHost *:443>
   ServerName <%= @params[:server_name] %>
+  ServerAlias <%= @params[:server_name] %>.local <%= @params[:server_aliases].join(' ') if @params[:server_aliases] %>
   SSLProxyEngine on
 
   <Proxy *>

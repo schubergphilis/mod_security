@@ -49,9 +49,13 @@ This cookbook depends on apache2 and build-essential
 ### Supported
 * Ubuntu (tested on 10.04)
 * Debian
+* RedHat
+* CentOS (tested on 5.6)
+* Fedora
+* Scientific?
 
 ### Coming Soon
-* RedHat, Fedora, Arch (anything else that apache2 supports)
+* Arch (anything else that apache2 supports)
 
 Attributes
 ==========
@@ -84,6 +88,10 @@ install_owasp_core_rule_set
 Changes
 =======
 
+* 0.0.5
+ * add server alias support for mod_secure_proxy definition
+* 0.0.3/0.0.4
+ * add RedHat-based distro support
 * 0.0.2 
  * upgrade to mod_security 2.6.2
  * flesh out main config options as chef attributes

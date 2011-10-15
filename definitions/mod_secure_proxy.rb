@@ -30,6 +30,7 @@ define :mod_secure_proxy, :enable => true do
   web_app params[:name] do
     template "mod_secure_proxy.conf.erb"
     server_name my_params[:server_name]
+    server_aliases my_params[:server_aliases] 
     enable_https(my_params[:enable_https] || false) 
   end
 
