@@ -113,18 +113,18 @@ default[:mod_security][:crs][:rules][:optional][:modsecurity_crs_55_marketing] =
 # Experimental rules.  There be monstars here! Maybe.
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_11_brute_force] = false
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_11_dos_protection] = false
-default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_11_proxy_abuse] = false
+default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_11_proxy_abuse] = false # FIXME: hardcoded data file
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_11_slow_dos_protection] = false
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_25_cc_track_pan] = false
-default[:mod_security][:crs][:rules][:experimental]["modsecurity_crs_40_appsensor_detection_point_2.0_setup"] = false
-default[:mod_security][:crs][:rules][:experimental]["modsecurity_crs_40_appsensor_detection_point_2.1_request_exception"] = false
-default[:mod_security][:crs][:rules][:experimental]["modsecurity_crs_40_appsensor_detection_point_2.9_honeytrap"] = false
-default[:mod_security][:crs][:rules][:experimental]["modsecurity_crs_40_appsensor_detection_point_3.0_end"] = false
+default[:mod_security][:crs][:rules][:experimental]["modsecurity_crs_40_appsensor_detection_point_2.0_setup"] = false # LUA 
+default[:mod_security][:crs][:rules][:experimental]["modsecurity_crs_40_appsensor_detection_point_2.1_request_exception"] = false # LUA?
+default[:mod_security][:crs][:rules][:experimental]["modsecurity_crs_40_appsensor_detection_point_2.9_honeytrap"] = false # LUA?
+default[:mod_security][:crs][:rules][:experimental]["modsecurity_crs_40_appsensor_detection_point_3.0_end"] = false # LUA?
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_40_http_parameter_pollution] = false
-default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_41_advanced_filters] = false
+default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_41_advanced_filters] = false # LUA?
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_42_csp_enforcement] = false
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_45_char_anomaly] = false
-default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_55_response_profiling] = false
+default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_55_response_profiling] = false # LUA?
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_56_pvs_checks] = false
-default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_61_ip_forensics] = false
+default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_61_ip_forensics] = false # Unknown action? dependency
 
