@@ -91,7 +91,7 @@ default[:mod_security][:crs][:rules][:slr][:modsecurity_crs_46_slr_et_phpbb_atta
 default[:mod_security][:crs][:rules][:slr][:modsecurity_crs_46_slr_et_rfi_attacks] = false
 default[:mod_security][:crs][:rules][:slr][:modsecurity_crs_46_slr_et_sqli_attacks] = false
 default[:mod_security][:crs][:rules][:slr][:modsecurity_crs_46_slr_et_wordpress_attacks] = false
-default[:mod_security][:crs][:rules][:slr][:modsecurity_crs_46_slr_et_xss_attacks] = false # test later FIXME
+default[:mod_security][:crs][:rules][:slr][:modsecurity_crs_46_slr_et_xss_attacks] = false 
 
 # Optional rules.
 default[:mod_security][:crs][:rules][:optional][:modsecurity_crs_10_ignore_static] = false
