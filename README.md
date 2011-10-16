@@ -90,6 +90,8 @@ Changes
 
 * 0.0.5
  * add server alias support for mod_secure_proxy definition
+ * test and fix data file loading issues in main,srl, and optional rulesets
+ * identify experimental rulesets that don't work in our environment yet
 * 0.0.3/0.0.4
  * add RedHat-based distro support
 * 0.0.2 
