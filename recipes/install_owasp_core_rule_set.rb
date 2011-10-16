@@ -42,9 +42,18 @@ node[:mod_security][:crs][:rules].each_pair do |rule_group,rules|
       notifies :restart, resources(:service => "apache2"), :delayed
     end
 
-    # why does the crs disappear from the data filenames? why!?
-    data_filename = "#{rule.gsub(/crs_/,'')}.data"
-    # other data filename anomalies
+    # deal with data_files
+    data_filename = case rule
+    when "modsecurity_crs_35_bad_robots"
+      "modsecurity_35_scanners.data"
+    when "modsecurity_crs_50_outbound"
+      "modsecurity_50_outbound_malware.data"
+    when "modsecurity_crs_46_slr_et_sqli_attacks"
+      "modsecurity_46_slr_et_sqli.data"
+    else
+      # why does the crs disappear from the data filenames? why!?
+      "#{rule.gsub(/crs_/,'')}.data"
+    end 
     
     link "#{node[:mod_security][:crs][:activated_rules]}/#{data_filename}" do
       to "#{rule_dir}/#{data_filename}"

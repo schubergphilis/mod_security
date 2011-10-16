@@ -70,7 +70,7 @@ default[:mod_security][:crs][:rules][:base][:modsecurity_crs_20_protocol_violati
 default[:mod_security][:crs][:rules][:base][:modsecurity_crs_21_protocol_anomalies] = true
 default[:mod_security][:crs][:rules][:base][:modsecurity_crs_23_request_limits] = true
 default[:mod_security][:crs][:rules][:base][:modsecurity_crs_30_http_policy] = true
-default[:mod_security][:crs][:rules][:base][:modsecurity_crs_35_bad_robots] = false # FIXME data file
+default[:mod_security][:crs][:rules][:base][:modsecurity_crs_35_bad_robots] = true
 default[:mod_security][:crs][:rules][:base][:modsecurity_crs_40_generic_attacks] = true
 default[:mod_security][:crs][:rules][:base][:modsecurity_crs_41_sql_injection_attacks] = true
 default[:mod_security][:crs][:rules][:base][:modsecurity_crs_41_xss_attacks] = true
@@ -78,7 +78,7 @@ default[:mod_security][:crs][:rules][:base][:modsecurity_crs_42_tight_security] 
 default[:mod_security][:crs][:rules][:base][:modsecurity_crs_45_trojans] = true
 default[:mod_security][:crs][:rules][:base][:modsecurity_crs_47_common_exceptions] = true
 default[:mod_security][:crs][:rules][:base][:modsecurity_crs_49_inbound_blocking] = true
-default[:mod_security][:crs][:rules][:base][:modsecurity_crs_50_outbound] = false # FIXME
+default[:mod_security][:crs][:rules][:base][:modsecurity_crs_50_outbound] = true
 default[:mod_security][:crs][:rules][:base][:modsecurity_crs_59_outbound_blocking] = true
 default[:mod_security][:crs][:rules][:base][:modsecurity_crs_60_correlation] = true
 
