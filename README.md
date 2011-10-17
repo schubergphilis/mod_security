@@ -88,6 +88,8 @@ install_owasp_core_rule_set
 Changes
 =======
 
+* 0.0.6 
+ * version bump to fix packaging issue
 * 0.0.5
  * add server alias support for mod_secure_proxy definition
  * test and fix data file loading issues in main,srl, and optional rulesets
