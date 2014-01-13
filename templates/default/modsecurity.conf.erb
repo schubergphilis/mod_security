@@ -23,7 +23,7 @@ SecRequestBodyAccess <%= node[:mod_security][:request_body_access] %>
 # Initiate XML Processor in case of xml content-type
 #
 SecRule REQUEST_HEADERS:Content-Type "text/xml" \
-     "phase:1,t:none,t:lowercase,pass,nolog,ctl:requestBodyProcessor=XML"
+     "id:'200000',phase:1,t:none,t:lowercase,pass,nolog,ctl:requestBodyProcessor=XML"
 
 
 # Maximum request body size we will accept for buffering. If you support
@@ -32,7 +32,7 @@ SecRule REQUEST_HEADERS:Content-Type "text/xml" \
 # to the size of data, with files excluded. You want to keep that value as
 # low as practical.
 #
-SecRequestBodyLimit  <%= node[:mod_security][:request_body_limit] %>
+SecRequestBodyLimit <%= node[:mod_security][:request_body_limit] %>
 SecRequestBodyNoFilesLimit <%= node[:mod_security][:request_body_no_files_limit] %>
 
 # Store up to 128 KB of request body data in memory. When the multipart
@@ -54,7 +54,7 @@ SecRequestBodyLimitAction <%= node[:mod_security][:request_body_limit_action] %>
 # or log a high-severity alert (when deployed in detection-only mode).
 #
 SecRule REQBODY_ERROR "!@eq 0" \
-"phase:2,t:none,log,deny,status:400,msg:'Failed to parse request body.',logdata:'%{reqbody_error_msg}',severity:2"
+"id:'200001', phase:2,t:none,log,deny,status:400,msg:'Failed to parse request body.',logdata:'%{reqbody_error_msg}',severity:2"
 
 # By default be strict with what we accept in the multipart/form-data
 # request body. If the rule below proves to be too strict for your
@@ -62,8 +62,8 @@ SecRule REQBODY_ERROR "!@eq 0" \
 # _not_ to remove it altogether.
 #
 SecRule MULTIPART_STRICT_ERROR "!@eq 0" \
-"phase:2,t:none,log,deny,status:44,msg:'Multipart request body \
-failed strict validation: \
+"id:'200002',phase:2,t:none,log,deny,status:44, \
+msg:'Multipart request body failed strict validation: \
 PE %{REQBODY_PROCESSOR_ERROR}, \
 BQ %{MULTIPART_BOUNDARY_QUOTED}, \
 BW %{MULTIPART_BOUNDARY_WHITESPACE}, \
@@ -71,16 +71,16 @@ DB %{MULTIPART_DATA_BEFORE}, \
 DA %{MULTIPART_DATA_AFTER}, \
 HF %{MULTIPART_HEADER_FOLDING}, \
 LF %{MULTIPART_LF_LINE}, \
-SM %{MULTIPART_SEMICOLON_MISSING}, \
+SM %{MULTIPART_MISSING_SEMICOLON}, \
 IQ %{MULTIPART_INVALID_QUOTING}, \
-IQ %{MULTIPART_INVALID_PART}, \
+IP %{MULTIPART_INVALID_PART}, \
 IH %{MULTIPART_INVALID_HEADER_FOLDING}, \
-IH %{MULTIPART_FILE_LIMIT_EXCEEDED}'"
+FL %{MULTIPART_FILE_LIMIT_EXCEEDED}'"
 
 # Did we see anything that might be a boundary?
 #
 SecRule MULTIPART_UNMATCHED_BOUNDARY "!@eq 0" \
-"phase:2,t:none,log,deny,status:44,msg:'Multipart parser detected a possible unmatched boundary.'"
+"id:'200003',phase:2,t:none,log,deny,msg:'Multipart parser detected a possible unmatched boundary.'"
 
 # PCRE Tuning
 # We want to avoid a potential RegEx DoS condition
@@ -94,15 +94,15 @@ SecPcreMatchLimitRecursion <%= node[:mod_security][:pcre_match_limit_recursion] 
 # MSC_PCRE_LIMITS_EXCEEDED: PCRE match limits were exceeded.
 #
 SecRule TX:/^MSC_/ "!@streq 0" \
-        "phase:2,t:none,deny,msg:'ModSecurity internal error flagged: %{MATCHED_VAR_NAME}'"
+        "id:'200004',phase:2,t:none,deny,msg:'ModSecurity internal error flagged: %{MATCHED_VAR_NAME}'"
 
 
 # -- Response body handling --------------------------------------------------
 
-# Allow ModSecurity to access response bodies.
+# Allow ModSecurity to access response bodies. 
 # You should have this directive enabled in order to identify errors
 # and data leakage issues.
-#
+# 
 # Do keep in mind that enabling this directive does increases both
 # memory consumption and response latency.
 #
@@ -128,13 +128,13 @@ SecResponseBodyLimitAction <%= node[:mod_security][:request_body_limit_action] %
 
 # The location where ModSecurity stores temporary files (for example, when
 # it needs to handle a file upload that is larger than the configured limit).
-#
-# This default setting is chosen due to all systems have /tmp available however,
+# 
+# This default setting is chosen due to all systems have /tmp available however, 
 # this is less than ideal. It is recommended that you specify a location that's private.
 #
 SecTmpDir <%= node[:mod_security][:tmp_dir] %>
 
-# The location where ModSecurity will keep its persistent data.  This default setting
+# The location where ModSecurity will keep its persistent data.  This default setting 
 # is chosen due to all systems have /tmp available however, it
 # too should be updated to a place that other users can't access.
 #
@@ -174,7 +174,7 @@ SecDataDir <%= node[:mod_security][:data_dir] %>
 # -- Audit log configuration -------------------------------------------------
 
 # Log the transactions that are marked by a rule, as well as those that
-# trigger a server error (determined by a 5xx or 4xx, excluding 404,
+# trigger a server error (determined by a 5xx or 4xx, excluding 404,  
 # level response status codes).
 #
 SecAuditEngine <%= node[:mod_security][:audit_engine] %>
@@ -206,3 +206,10 @@ SecArgumentSeparator <%= node[:mod_security][:argument_separator] %>
 # evasion attacks (against the rules that examine named cookies).
 #
 SecCookieFormat <%= node[:mod_security][:cookie_format] %>
+
+# Specify your Unicode Code Point.
+# This mapping is used by the t:urlDecodeUni transformation function
+# to properly map encoded data to your language. Properly setting
+# these directives helps to reduce false positives and negatives.
+#
+SecUnicodeMapFile unicode.mapping 20127
