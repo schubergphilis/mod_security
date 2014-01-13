@@ -81,8 +81,8 @@ directory "#{node[:mod_security][:rules]}" do
   recursive true
 end
 
-template "mod_security" do
-  path "#{node[:apache][:dir]}/conf.d/mod_security"
+template "modsecurity.conf" do
+  path "#{node[:apache][:dir]}/conf.d/modsecurity.conf"
   source "mod_security.erb"
   owner node[:apache][:user]
   group node[:apache][:group]
