@@ -45,36 +45,37 @@ node[:mod_security][:crs][:rules].each_pair do |rule_group,rules|
     end
 
     # deal with data_files
-    data_filename = case rule
+    data_filenames = case rule
     when "modsecurity_crs_35_bad_robots"
-      "modsecurity_35_scanners.data"
+      ["modsecurity_35_scanners.data", "modsecurity_35_bad_robots.data"]
     when "modsecurity_crs_50_outbound"
-      "modsecurity_50_outbound_malware.data"
+      ["modsecurity_50_outbound_malware.data", "modsecurity_50_outbound.data"]
     when "modsecurity_crs_46_slr_et_joomla_attacks"
-      "modsecurity_46_slr_et_joomla.data"
+      ["modsecurity_46_slr_et_joomla.data"]
     when "modsecurity_crs_46_slr_et_lfi_attacks"
-      "modsecurity_46_slr_et_lfi.data"
+      ["modsecurity_46_slr_et_lfi.data"]
     when "modsecurity_crs_46_slr_et_phpbb_attacks"
-      "modsecurity_46_slr_et_phpbb.data"
+      ["modsecurity_46_slr_et_phpbb.data"]
     when "modsecurity_crs_46_slr_et_rfi_attacks"
-       "modsecurity_46_slr_et_rfi.data"
+       ["modsecurity_46_slr_et_rfi.data"]
     when "modsecurity_crs_46_slr_et_wordpress_attacks"
-       "modsecurity_46_slr_et_wordpress.data"
+       ["modsecurity_46_slr_et_wordpress.data"]
     when "modsecurity_crs_46_slr_et_xss_attacks"
-       "modsecurity_46_slr_et_xss.data"
+       ["modsecurity_46_slr_et_xss.data"]
     when "modsecurity_crs_46_slr_et_sqli_attacks"
-      "modsecurity_46_slr_et_sqli.data"
+      ["modsecurity_46_slr_et_sqli.data"]
     else
       # why does the crs disappear from the data filenames? why!?
-      "#{rule.gsub(/crs_/,'')}.data"
+      ["#{rule.gsub(/crs_/,'')}.data"]
     end
 
-    link "#{node[:mod_security][:crs][:activated_rules]}/#{data_filename}" do
-      to "#{rule_dir}/#{data_filename}"
-      action (flag ? :create : :delete )
-      only_if "test -e #{rule_dir}/#{data_filename}"
-      notifies :restart, resources(:service => "apache2"), :delayed
+    data_filenames.each do |data_filename|
+      link "#{node[:mod_security][:crs][:activated_rules]}/#{data_filename}" do
+        to "#{rule_dir}/#{data_filename}"
+        action (flag ? :create : :delete )
+        only_if "test -e #{rule_dir}/#{data_filename}"
+        notifies :restart, resources(:service => "apache2"), :delayed
+      end
     end
-
   end
 end
