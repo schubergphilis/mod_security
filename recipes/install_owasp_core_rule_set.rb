@@ -11,11 +11,13 @@ directory "#{node[:mod_security][:crs][:files]}" do
 end
 
 # install zipfile
-zipfile = "#{node[:mod_security][:crs][:files]}/modsecurity-crs_#{node[:mod_security][:crs][:version]}.zip"
-cookbook_file zipfile do
-  action :create_if_missing
-  mode   "0644"
-  backup false
+zipfile = "#{node[:mod_security][:crs][:files]}/#{node[:mod_security][:crs][:file_name]}"
+remote_file zipfile do
+    action :create_if_missing
+    source node[:mod_security][:crs][:dl_url]
+    mode "0644"
+    #checksum node[:mod_security][crs][:checksum] seems to get ignored? FIXME
+    backup false
 end
 
 # unzip core rule set if zipfile is updated
