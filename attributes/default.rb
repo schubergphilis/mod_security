@@ -15,7 +15,7 @@ default[:mod_security][:from_source]           = true
 default[:mod_security][:source_version]        = "2.7.7"
 default[:mod_security][:source_file]           = "modsecurity-apache_#{node[:mod_security][:source_version]}.tar.gz"
 #default[:mod_security][:source_checksum]       = "dfffdf21d15e8d0d300d970a74b02bd2" # SEEMS TO IGNORE? FIXME
-default[:mod_security][:source_dl_server]      = "https://github.com/SpiderLabs/ModSecurity/releases/download/"
+default[:mod_security][:source_dl_server]      = "https://github.com/SpiderLabs/ModSecurity/releases/download"
 default[:mod_security][:source_dl_url]         = "#{node[:mod_security][:source_dl_server]}/v#{node[:mod_security][:source_version]}/#{node[:mod_security][:source_file]}"
 default[:mod_security][:rules]                 = "#{node[:mod_security][:dir]}/rules"
 # core rule set locations
