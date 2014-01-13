@@ -30,6 +30,7 @@ default[:mod_security][:crs][:activated_rules] = "#{node[:mod_security][:crs][:r
 ##########
 # Base Configuration
 ##########
+default[:mod_security][:base_config]                  = "#{node[:mod_security][:dir]}/modsecurity.conf"
 default[:mod_security][:rule_engine]                  = "DetectionOnly"
 # "On" to actively block
 

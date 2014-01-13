@@ -82,7 +82,7 @@ directory "#{node[:mod_security][:rules]}" do
 end
 
 template "modsecurity.conf" do
-  path "#{node[:apache][:dir]}/conf.d/modsecurity.conf"
+  path "#{node[:mod_security][:base_config]}"
   source "mod_security.erb"
   owner node[:apache][:user]
   group node[:apache][:group]
