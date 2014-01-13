@@ -83,7 +83,7 @@ end
 
 template "modsecurity.conf" do
   path "#{node[:mod_security][:base_config]}"
-  source "mod_security.erb"
+  source "modsecurity.conf.erb"
   owner node[:apache][:user]
   group node[:apache][:group]
   mode 0644
