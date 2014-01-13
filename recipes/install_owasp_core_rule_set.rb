@@ -21,8 +21,8 @@ remote_file tarfile do
 end
 
 # untar core rule set if tarfile is updated
-execute "unzip_core_rule_set" do
-  command "tar -xzf #{tarfile} -C #{node[:mod_security][:crs][:rules_root_dir]}"
+execute "untar_core_rule_set" do
+  command "tar -xzf #{tarfile} -C #{node[:mod_security][:crs][:rules_root_dir]} --strip 1"
   action :nothing
   subscribes :run, resources(:remote_file => tarfile), :immediately
 end
@@ -67,14 +67,14 @@ node[:mod_security][:crs][:rules].each_pair do |rule_group,rules|
     else
       # why does the crs disappear from the data filenames? why!?
       "#{rule.gsub(/crs_/,'')}.data"
-    end 
-    
+    end
+
     link "#{node[:mod_security][:crs][:activated_rules]}/#{data_filename}" do
       to "#{rule_dir}/#{data_filename}"
       action (flag ? :create : :delete )
       only_if "test -e #{rule_dir}/#{data_filename}"
       notifies :restart, resources(:service => "apache2"), :delayed
     end
-    
+
   end
-end 
+end
