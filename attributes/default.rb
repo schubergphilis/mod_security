@@ -7,6 +7,9 @@ else
   default[:mod_security][:dir]                 = "/etc/apache2/mod_security"
 end
 
+# Apache MPM in use
+default['mod_security']['apache_mpm']  = 'prefork'
+
 # mod_security locations
 default[:mod_security][:from_source]           = true
 default[:mod_security][:source_version]        = "2.6.2"

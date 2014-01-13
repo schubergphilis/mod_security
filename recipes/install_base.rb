@@ -16,16 +16,32 @@ if node[:mod_security][:from_source]
   # COMPILE FROM SOURCE
   
   #install required libs
-  case node[:platform]
-  when "redhat","centos","scientific","fedora","suse"
-    packages = %w[pcre-devel httpd-devel libxml2-devel curl-devel]
-  when "ubuntu","debian"
-    packages = %w[apache2-dev libxml2-dev libcurl3-dev]
+
+  case node['platform_family']
   when "arch"
-    # OH NOES!
+    package "apache"
+  when "rhel"
+    package "httpd-devel"
+    if node['platform_version'].to_f < 6.0
+      package 'curl-devel'
+    else
+      package 'libcurl-devel'
+      package 'openssl-devel'
+      package 'zlib-devel'
+    end
+  else
+    apache_development_package =  if %w( worker threaded ).include? node['mod_security']['apache_mpm']
+                                    'apache2-threaded-dev'
+                                  else
+                                    'apache2-prefork-dev'
+                                  end
+    %W( #{apache_development_package} libxml2-dev libcurl3-dev ).each do |pkg|
+      package pkg do
+        action :upgrade
+      end
+    end
   end
-  packages.each {|p| package p}
-  
+
   directory "#{node[:mod_security][:dir]}/source" do
     recursive true
   end
