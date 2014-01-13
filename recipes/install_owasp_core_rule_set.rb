@@ -30,7 +30,7 @@ end
 # install settings config
 # - currently heavily tied to version of crs. be wary of updating one
 # - without the other
-template "#{node[:mod_security][:crs][:rules_root_dir]}/modsecurity_crs_10_config.conf" do
+template "#{node[:mod_security][:crs][:rules_root_dir]}/modsecurity_crs_10_setup.conf" do
   mode "0644"
   notifies :restart, resources(:service => "apache2"), :delayed
 end
