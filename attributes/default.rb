@@ -16,7 +16,12 @@ default[:mod_security][:source_dl_server]      = "http://downloads.sourceforge.n
 default[:mod_security][:source_dl_url]         = "#{node[:mod_security][:source_dl_server]}#{node[:mod_security][:source_version]}/#{node[:mod_security][:source_file]}"
 default[:mod_security][:rules]                 = "#{node[:mod_security][:dir]}/rules"
 # core rule set locations
-default[:mod_security][:crs][:version]         = "2.2.2"
+default[:mod_security][:crs][:version]         = "2.2.8"
+default[:mod_security][:crs][:file_url]        = "#{node[:mod_security][:crs][:version]}.tar.gz"
+default[:mod_security][:crs][:file_name]       = "owasp-modsecurity-crs-#{node[:mod_security][:crs][:file_url]}"
+#default[:mod_security][:crs][:checksum]        = "dfffdf21d15e8d0d300d970a74b02bd2" # SEEMS TO IGNORE? FIXME
+default[:mod_security][:crs][:dl_server]       = "https://github.com/SpiderLabs/owasp-modsecurity-crs/archive/"
+default[:mod_security][:crs][:dl_url]          = "#{node[:mod_security][:crs][:dl_server]}#{node[:mod_security][:crs][:file_url]}"
 default[:mod_security][:crs][:root_dir]        = "#{node[:mod_security][:dir]}/crs"
 default[:mod_security][:crs][:files]           = "#{node[:mod_security][:crs][:root_dir]}/files"
 default[:mod_security][:crs][:rules_root_dir]  = "#{node[:mod_security][:crs][:root_dir]}/rules"

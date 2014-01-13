@@ -1,5 +1,5 @@
 
-package "unzip" do
+package "tar" do
   action :install
 end
 
@@ -10,9 +10,9 @@ directory "#{node[:mod_security][:crs][:files]}" do
   recursive true
 end
 
-# install zipfile
-zipfile = "#{node[:mod_security][:crs][:files]}/#{node[:mod_security][:crs][:file_name]}"
-remote_file zipfile do
+# install tarfile
+tarfile = "#{node[:mod_security][:crs][:files]}/#{node[:mod_security][:crs][:file_name]}"
+remote_file tarfile do
     action :create_if_missing
     source node[:mod_security][:crs][:dl_url]
     mode "0644"
@@ -20,11 +20,11 @@ remote_file zipfile do
     backup false
 end
 
-# unzip core rule set if zipfile is updated
+# untar core rule set if tarfile is updated
 execute "unzip_core_rule_set" do
-  command "unzip -q #{zipfile} -d #{node[:mod_security][:crs][:rules_root_dir]}"
+  command "tar -xzf #{tarfile} -C #{node[:mod_security][:crs][:rules_root_dir]}"
   action :nothing
-  subscribes :run, resources(:cookbook_file => zipfile), :immediately
+  subscribes :run, resources(:remote_file => tarfile), :immediately
 end
 
 # install settings config
