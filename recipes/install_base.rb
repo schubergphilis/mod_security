@@ -80,6 +80,14 @@ if node[:mod_security][:from_source]
     notifies :restart, resources(:service => "apache2"), :delayed
   end
   
+  template "#{node[:apache][:dir]}/mods-enabled/mod-security.conf" do
+    owner node[:apache][:user]
+    group node[:apache][:group]
+    mode 0644
+    #backup false
+    notifies :restart, resources(:service => "apache2"), :delayed
+  end
+
 else
   # INSTALL FROM PACKAGE
   
