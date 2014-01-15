@@ -26,3 +26,6 @@ suites:
     run_list:
       - recipe[mod_security::default]
     attributes:
+    excludes:
+      - centos-6.5
+      - fedora-20
