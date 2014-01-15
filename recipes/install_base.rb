@@ -1,6 +1,6 @@
 # install package common to package and source install
-case node[:platform]
-when "redhat","centos","scientific","fedora","suse"
+case node[:platform_family]
+when "rhel","fedora","suse"
   packages = %w[apr apr-util pcre curl]
 when "ubuntu","debian"
   packages = %w[libapr1 libaprutil1 libpcre3 libxml2 libcurl3]
@@ -20,7 +20,7 @@ if node[:mod_security][:from_source]
   case node['platform_family']
   when "arch"
     package "apache"
-  when "rhel"
+  when "rhel","fedora","suse"
     package "httpd-devel"
     if node['platform_version'].to_f < 6.0
       package 'curl-devel'
@@ -29,16 +29,14 @@ if node[:mod_security][:from_source]
       package 'openssl-devel'
       package 'zlib-devel'
     end
-  else
+  when "debian"
     apache_development_package =  if %w( worker threaded ).include? node['mod_security']['apache_mpm']
                                     'apache2-threaded-dev'
                                   else
                                     'apache2-prefork-dev'
                                   end
     %W( #{apache_development_package} libxml2-dev libcurl4-openssl-dev ).each do |pkg|
-      package pkg do
-        action :upgrade
-      end
+      package pkg
     end
   end
 
@@ -98,11 +96,10 @@ if node[:mod_security][:from_source]
 
 else
   # INSTALL FROM PACKAGE
-  
-  case node[:platform]
-  when "redhat","centos","scientific","fedora","suse"
+  case node[:platform_family]
+  when "rhel","fedora","suse"
     package "mod_security"
-  when "ubuntu","debian"
+  when "debian"
     package "libapache-mod-security"
   when "arch"
     # OH NOES!

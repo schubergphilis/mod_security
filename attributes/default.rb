@@ -1,7 +1,7 @@
 
 # set root directory.
-case platform
-when "redhat","centos","scientific","fedora","suse","arch"
+case node['platform_family']
+when "rhel", "arch"
   default[:mod_security][:dir]                 = "/etc/httpd/mod_security"
 else
   default[:mod_security][:dir]                 = "/etc/apache2/mod_security"
