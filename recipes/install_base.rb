@@ -98,7 +98,8 @@ if node[:mod_security][:from_source]
   # setup apache module loading
   apache_module "unique_id"
   # we have to manage our own loading
-  template "#{node[:apache][:dir]}/mods-enabled/mod-security.load" do
+  template "#{node[:apache][:dir]}/mods-available/mod-security.load" do
+    source "mods/mod-security.load.erb"
     owner node[:apache][:user]
     group node[:apache][:group]
     mode 0644
@@ -106,12 +107,17 @@ if node[:mod_security][:from_source]
     notifies :restart, resources(:service => "apache2"), :delayed
   end
 
-  template "#{node[:apache][:dir]}/mods-enabled/mod-security.conf" do
+  template "#{node[:apache][:dir]}/mods-available/mod-security.conf" do
+    source "mods/mod-security.conf.erb"
     owner node[:apache][:user]
     group node[:apache][:group]
     mode 0644
     #backup false
     notifies :restart, resources(:service => "apache2"), :delayed
+  end
+
+  apache_module "mod-security" do
+    conf true
   end
 
   # FIXME: Should probably not just link this and include it in the cookbook
