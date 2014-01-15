@@ -10,21 +10,33 @@ directory "#{node[:mod_security][:crs][:files]}" do
   recursive true
 end
 
-# install tarfile
-tarfile = "#{node[:mod_security][:crs][:files]}/#{node[:mod_security][:crs][:file_name]}"
-remote_file tarfile do
+# download and install Core Rule Set
+crs_tar_file = "#{node[:mod_security][:crs][:files]}/#{node[:mod_security][:crs][:file_name]}"
+remote_file crs_tar_file do
     action :create_if_missing
     source node[:mod_security][:crs][:dl_url]
     mode "0644"
-    #checksum node[:mod_security][crs][:checksum] seems to get ignored? FIXME
+    checksum node[:mod_security][:crs][:checksum] # Not a checksum check for security. Will be unused with create_if_missing.
     backup false
+    notifies :create, "ruby_block[validate_crs_tarball_checksum]", :immediately
 end
 
-# untar core rule set if tarfile is updated
-execute "untar_core_rule_set" do
-  command "tar -xzf #{tarfile} -C #{node[:mod_security][:crs][:rules_root_dir]} --strip 1"
+ruby_block "validate_crs_tarball_checksum" do
   action :nothing
-  subscribes :run, resources(:remote_file => tarfile), :immediately
+  block do
+    require 'digest'
+    checksum = Digest::SHA256.file("#{crs_tar_file}").hexdigest
+    if checksum != node[:mod_security][:crs][:checksum]
+      raise "Downloaded Tarball Checksum #{checksum} does not match known checksum #{node[:mod_security][:crs][:checksum]}"
+    end
+  end
+  notifies :run, "execute[untar_core_rule_set]", :immediately
+end
+
+# untar core rule set if crs_tar_file is updated
+execute "untar_core_rule_set" do
+  command "tar -xzf #{crs_tar_file} -C #{node[:mod_security][:crs][:rules_root_dir]} --strip 1"
+  action :nothing
 end
 
 # install settings config
