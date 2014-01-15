@@ -30,6 +30,7 @@ describe "Apache2 with mod_security" do
 
   it "apache2 has a mod-security load file" do
     expect(file("/etc/apache2/mods-enabled/mod-security.load")).to be_file
+    expect(file("/etc/apache2/mods-enabled/mod-security.conf")).to contain 'LoadModule security2_module /usr/local/modsecurity/lib/mod_security2.so' 
   end
 
   it "mod_security is configured" do
