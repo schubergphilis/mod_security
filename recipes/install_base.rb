@@ -101,14 +101,16 @@ if node[:mod_security][:from_source]
 
   # setup apache module loading
   apache_module "unique_id"
-  # we have to manage our own loading
-  template "#{node[:apache][:dir]}/mods-available/mod-security.load" do
-    source "mods/mod-security.load.erb"
-    owner node[:apache][:user]
-    group node[:apache][:group]
-    mode 0644
-    #backup false
-    notifies :restart, resources(:service => "apache2"), :delayed
+
+  if !platform_family?('rhel', 'fedora', 'arch', 'suse', 'freebsd')
+    template "#{node[:apache][:dir]}/mods-available/mod-security.load" do
+      source "mods/mod-security.load.erb"
+      owner node[:apache][:user]
+      group node[:apache][:group]
+      mode 0644
+      #backup false
+      notifies :restart, resources(:service => "apache2"), :delay
+    end
   end
 
   template "#{node[:apache][:dir]}/mods-available/mod-security.conf" do
@@ -122,6 +124,11 @@ if node[:mod_security][:from_source]
 
   apache_module "mod-security" do
     conf true
+    # The following attributes are only used by the apache2 cookbook on rhel, fedora, arch, suse and freebsd
+    # as it only drop off a .load file for those platforms
+    identifier 'security2_module'
+    module_path '/usr/local/modsecurity/lib/mod_security2.so'
+#    filename 'mod_security2.so'
   end
 
   # FIXME: Should probably not just link this and include it in the cookbook
