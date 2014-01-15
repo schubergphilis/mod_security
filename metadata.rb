@@ -9,8 +9,8 @@ version           "0.0.6"
 depends "apache2"
 depends "build-essential"
 depends "apt"
+depends "yum"
 
-#%w{ redhat centos ubuntu debian }.each do |os|
 %w{ redhat centos scientific fedora ubuntu debian }.each do |os|
   supports os
 end

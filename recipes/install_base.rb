@@ -1,11 +1,13 @@
 # install package common to package and source install
 case node[:platform_family]
 when "rhel","fedora","suse"
-  packages = %w[apr apr-util pcre curl]
+  packages = %w[apr apr-util pcre-devel libxml2-devel curl-devel]
 when "ubuntu","debian"
   packages = %w[libapr1 libaprutil1 libpcre3 libxml2 libcurl3]
 when "arch"
   packages = %w[apr apr-util pcre libxml2 lib32-curl]
+else 
+  raise "#{node[:platform_family]} is not a supported platform"
 end
 packages.each {|p| package p}
 

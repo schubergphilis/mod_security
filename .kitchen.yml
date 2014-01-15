@@ -29,3 +29,12 @@ suites:
     excludes:
       - centos-6.5
       - fedora-20
+  - name: rhel
+    run_list:
+      - recipe[mod_security::default]
+    attributes:
+    excludes:
+      - ubuntu-12.04
+      - ubuntu-13.04
+      - debian-6.0.8
+      - debian-7.2.0
