@@ -5,7 +5,7 @@ when "rhel","fedora","suse"
 when "ubuntu","debian"
   packages = %w[libapr1 libaprutil1 libpcre3 libxml2 libcurl3]
 when "arch"
-  # OH NOES!
+  packages = %w[apr apr-util pcre libxml2 lib32-curl]
 end
 packages.each {|p| package p}
 
@@ -19,7 +19,7 @@ if node[:mod_security][:from_source]
 
   case node['platform_family']
   when "arch"
-    package "apache"
+    # OH NOES
   when "rhel","fedora","suse"
     package "httpd-devel"
     if node['platform_version'].to_f < 6.0
@@ -102,7 +102,7 @@ else
   when "debian"
     package "libapache-mod-security"
   when "arch"
-    # OH NOES!
+    package "modsecurity-apache"
   end
 end
 
