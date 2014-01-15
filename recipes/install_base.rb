@@ -65,20 +65,34 @@ if node[:mod_security][:from_source]
         raise "Downloaded Tarball Checksum #{checksum} does not match known checksum #{node[:mod_security][:source_checksum]}"
       end
     end
-    notifies :run, "bash[install_mod_security]", :immediately
+    notifies :run, "execute[unpack_mod_security_source_tarball]", :immediately
   end
 
-  bash "install_mod_security" do
+  execute "unpack_mod_security_source_tarball" do
+    command "tar -xvzf #{node[:mod_security][:source_file]}"
     action :nothing
-    code <<-EOH
-      cd #{node[:mod_security][:dir]}/source
-      tar -zxf #{node[:mod_security][:source_file]}
-      cd modsecurity-apache_#{node[:mod_security][:source_version]}
-      ./configure
-      make
-      make mlogc
-      make install
-    EOH
+    cwd "#{node[:mod_security][:dir]}/source"
+    notifies :run, "execute[configure_mod_security]", :immediately
+  end
+
+  execute "configure_mod_security" do
+    command "./configure"
+    cwd "#{node[:mod_security][:dir]}/source/modsecurity-apache_#{node[:mod_security][:source_version]}"
+    action :nothing
+    notifies :run, "execute[make_mod_security]", :immediately
+  end
+
+  execute "make_mod_security" do
+    command "make clean && make && make mlogc"
+    cwd "#{node[:mod_security][:dir]}/source/modsecurity-apache_#{node[:mod_security][:source_version]}"
+    action :nothing
+    notifies :run, "execute[install_mod_security]", :immediately
+  end
+
+  execute "install_mod_security" do
+    command "make install"
+    cwd "#{node[:mod_security][:dir]}/source/modsecurity-apache_#{node[:mod_security][:source_version]}"
+    action :nothing
   end
 
   # setup apache module loading
