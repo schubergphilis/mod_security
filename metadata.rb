@@ -1,3 +1,4 @@
+name              "mod_security"
 maintainer        "HoneyApps Inc."
 maintainer_email  "jro@honeyapps.com"
 license           "Apache 2.0"
