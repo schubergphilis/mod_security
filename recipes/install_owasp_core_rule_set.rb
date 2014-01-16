@@ -3,10 +3,10 @@ package "tar" do
   action :install
 end
 
-directory "#{node[:mod_security][:crs][:rules_root_dir]}" do
+directory node[:mod_security][:crs][:rules_root_dir] do
   recursive true
 end
-directory "#{node[:mod_security][:crs][:files]}" do
+directory node[:mod_security][:crs][:files] do
   recursive true
 end
 
@@ -25,7 +25,7 @@ ruby_block "validate_crs_tarball_checksum" do
   action :nothing
   block do
     require 'digest'
-    checksum = Digest::SHA256.file("#{crs_tar_file}").hexdigest
+    checksum = Digest::SHA256.file(crs_tar_file).hexdigest
     if checksum != node[:mod_security][:crs][:checksum]
       raise "Downloaded Tarball Checksum #{checksum} does not match known checksum #{node[:mod_security][:crs][:checksum]}"
     end
@@ -44,7 +44,7 @@ end
 # - without the other
 template "#{node[:mod_security][:crs][:rules_root_dir]}/modsecurity_crs_10_setup.conf" do
   mode "0644"
-  notifies :restart, resources(:service => "apache2"), :delayed
+  notifies :restart, "service[apache2]", :delayed
 end
 
 node[:mod_security][:crs][:rules].each_pair do |rule_group,rules|
@@ -53,7 +53,7 @@ node[:mod_security][:crs][:rules].each_pair do |rule_group,rules|
     link "#{node[:mod_security][:crs][:activated_rules]}/#{rule}.conf" do
       to "#{rule_dir}/#{rule}.conf"
       action (flag ? :create : :delete )
-      notifies :restart, resources(:service => "apache2"), :delayed
+      notifies :restart, "service[apache2]", :delayed
     end
 
     # deal with data_files
@@ -86,7 +86,7 @@ node[:mod_security][:crs][:rules].each_pair do |rule_group,rules|
         to "#{rule_dir}/#{data_filename}"
         action (flag ? :create : :delete )
         only_if "test -e #{rule_dir}/#{data_filename}"
-        notifies :restart, resources(:service => "apache2"), :delayed
+        notifies :restart, "service[apache2]", :delayed
       end
     end
   end

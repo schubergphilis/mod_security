@@ -21,12 +21,12 @@ if node[:mod_security][:from_source]
 
   #install required libs
 
-  case node['platform_family']
+  case node[:platform_family]
   when "arch"
     # OH NOES
   when "rhel","fedora","suse"
     package "httpd-devel"
-    if node['platform_version'].to_f < 6.0
+    if node[:platform_version].to_f < 6.0
       package 'curl-devel'
     else
       package 'libcurl-devel'
@@ -34,7 +34,7 @@ if node[:mod_security][:from_source]
       package 'zlib-devel'
     end
   when "debian"
-    apache_development_package =  if %w( worker threaded ).include? node['mod_security']['apache_mpm']
+    apache_development_package =  if %w( worker threaded ).include? node[:mod_security][:apache_mpm]
                                     'apache2-threaded-dev'
                                   else
                                     'apache2-prefork-dev'
@@ -64,7 +64,7 @@ if node[:mod_security][:from_source]
     action :nothing
     block do
       require 'digest'
-      checksum = Digest::SHA256.file("#{source_code_tar_file}").hexdigest
+      checksum = Digest::SHA256.file(source_code_tar_file).hexdigest
       if checksum != node[:mod_security][:source_checksum]
         raise "Downloaded Tarball Checksum #{checksum} does not match known checksum #{node[:mod_security][:source_checksum]}"
       end
@@ -109,7 +109,7 @@ if node[:mod_security][:from_source]
       group node[:apache][:group]
       mode 0644
       #backup false
-      notifies :restart, resources(:service => "apache2"), :delayed
+      notifies :restart, "service[apache2]", :delayed
     end
   end
 
@@ -119,7 +119,7 @@ if node[:mod_security][:from_source]
     group node[:apache][:group]
     mode 0644
     #backup false
-    notifies :restart, resources(:service => "apache2"), :delayed
+    notifies :restart, "service[apache2]", :delayed
   end
 
   apache_module "mod-security" do
@@ -136,7 +136,7 @@ if node[:mod_security][:from_source]
   link "#{node[:mod_security][:dir]}/unicode.mapping" do
       to "#{node[:mod_security][:dir]}/source/modsecurity-apache_#{node[:mod_security][:source_version]}/unicode.mapping"
       action :create
-      notifies :restart, resources(:service => "apache2"), :delayed
+      notifies :restart, "service[apache2]", :delayed
   end
 
 else
@@ -151,16 +151,16 @@ else
   end
 end
 
-directory "#{node[:mod_security][:rules]}" do
+directory node[:mod_security][:rules] do
   recursive true
 end
 
 template "modsecurity.conf" do
-  path "#{node[:mod_security][:base_config]}"
+  path node[:mod_security][:base_config]
   source "modsecurity.conf.erb"
   owner node[:apache][:user]
   group node[:apache][:group]
   mode 0644
   backup false
-  notifies :restart, resources(:service => "apache2")
+  notifies :restart, "service[apache2]"
 end

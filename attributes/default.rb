@@ -1,6 +1,6 @@
 
 # set root directory.
-case node['platform_family']
+case node[:platform_family]
 when "rhel", "arch"
   default[:mod_security][:dir]                 = "/etc/httpd/mod_security"
 else
@@ -8,7 +8,7 @@ else
 end
 
 # Apache MPM in use
-default['mod_security']['apache_mpm']  = 'prefork'
+default[:mod_security][:apache_mpm]  = 'prefork'
 
 # mod_security locations
 default[:mod_security][:from_source]           = true
