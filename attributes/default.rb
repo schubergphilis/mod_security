@@ -14,19 +14,22 @@ default[:mod_security][:apache_mpm]  = 'prefork'
 default[:mod_security][:from_source]           = true
 default[:mod_security][:source_version]        = '2.7.7'
 default[:mod_security][:source_file]           = "modsecurity-apache_#{node[:mod_security][:source_version]}.tar.gz"
-default[:mod_security][:source_checksum]       = '11e05cfa6b363c2844c6412a40ff16f0021e302152b38870fd1f2f44b204379b' # SEEMS TO IGNORE? FIXME
+default[:mod_security][:source_checksum]       = '11e05cfa6b363c2844c6412a40ff16f0021e302152b38870fd1f2f44b204379b'
 default[:mod_security][:source_dl_server]      = 'https://github.com/SpiderLabs/ModSecurity/releases/download'
 default[:mod_security][:source_dl_url]         = "#{node[:mod_security][:source_dl_server]}/v#{node[:mod_security][:source_version]}/#{node[:mod_security][:source_file]}"
+default[:mod_security][:source_module_name]    = 'mod_security2.so'
+default[:mod_security][:source_module_path]    = '/usr/local/modsecurity/lib' #FIXME: Pass to ./configure script
+default[:mod_security][:source_module_identifier] = 'security2_module'
 default[:mod_security][:rules]                 = "#{node[:mod_security][:dir]}/rules"
+
 # core rule set locations
 default[:mod_security][:crs][:version]         = '2.2.8'
 default[:mod_security][:crs][:file_url]        = "#{node[:mod_security][:crs][:version]}.tar.gz"
 default[:mod_security][:crs][:file_name]       = "owasp-modsecurity-crs-#{node[:mod_security][:crs][:file_url]}"
-default[:mod_security][:crs][:checksum]        = '183c6a912b142ca226c9401b281d5a763378efe993572e0a3e93b550161e404f' # SEEMS TO IGNORE? FIXME
+default[:mod_security][:crs][:checksum]        = '183c6a912b142ca226c9401b281d5a763378efe993572e0a3e93b550161e404f'
 default[:mod_security][:crs][:dl_server]       = 'https://github.com/SpiderLabs/owasp-modsecurity-crs/archive/'
 default[:mod_security][:crs][:dl_url]          = "#{node[:mod_security][:crs][:dl_server]}#{node[:mod_security][:crs][:file_url]}"
 default[:mod_security][:crs][:root_dir]        = "#{node[:mod_security][:dir]}/crs"
-default[:mod_security][:crs][:files]           = "#{node[:mod_security][:crs][:root_dir]}/files"
 default[:mod_security][:crs][:rules_root_dir]  = "#{node[:mod_security][:crs][:root_dir]}/rules"
 default[:mod_security][:crs][:activated_rules] = "#{node[:mod_security][:crs][:rules_root_dir]}/activated_rules"
 

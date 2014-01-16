@@ -45,19 +45,21 @@ if node[:mod_security][:from_source]
     end
   end
 
-  directory "#{node[:mod_security][:dir]}/source" do
-    recursive true
-  end
+  directory "#{node[:mod_security][:dir]}"
 
   # Download and compile mod_security from source
 
-  source_code_tar_file = "#{node[:mod_security][:dir]}/source/#{node[:mod_security][:source_file]}"
+  source_code_tar_file = "#{Chef::Config[:file_cache_path]}/#{node[:mod_security][:source_file]}"
   remote_file source_code_tar_file do
-    action :create_if_missing
+    action :create
     source node[:mod_security][:source_dl_url]
     mode '0644'
     checksum node[:mod_security][:source_checksum] # Not a checksum check for security. Will be unused with create_if_missing.
     backup false
+    not_if do
+      # FIXME: Only checks for the existence of the module file. Doesn't check the version of the module is as specified.
+      File.exists?("#{node[:mod_security][:source_module_path]}/#{node[:mod_security][:source_module_name]}")
+    end
     notifies :create, 'ruby_block[validate_tarball_checksum]', :immediately
   end
 
@@ -77,27 +79,27 @@ if node[:mod_security][:from_source]
   execute 'unpack_mod_security_source_tarball' do
     command "tar -xvzf #{node[:mod_security][:source_file]}"
     action :nothing
-    cwd "#{node[:mod_security][:dir]}/source"
+    cwd Chef::Config[:file_cache_path]
     notifies :run, 'execute[configure_mod_security]', :immediately
   end
 
   execute 'configure_mod_security' do
     command './configure'
-    cwd "#{node[:mod_security][:dir]}/source/modsecurity-apache_#{node[:mod_security][:source_version]}"
+    cwd "#{Chef::Config[:file_cache_path]}/modsecurity-apache_#{node[:mod_security][:source_version]}"
     action :nothing
     notifies :run, 'execute[make_mod_security]', :immediately
   end
 
   execute 'make_mod_security' do
     command 'make clean && make && make mlogc'
-    cwd "#{node[:mod_security][:dir]}/source/modsecurity-apache_#{node[:mod_security][:source_version]}"
+    cwd "#{Chef::Config[:file_cache_path]}/modsecurity-apache_#{node[:mod_security][:source_version]}"
     action :nothing
     notifies :run, 'execute[install_mod_security]', :immediately
   end
 
   execute 'install_mod_security' do
     command 'make install'
-    cwd "#{node[:mod_security][:dir]}/source/modsecurity-apache_#{node[:mod_security][:source_version]}"
+    cwd "#{Chef::Config[:file_cache_path]}/modsecurity-apache_#{node[:mod_security][:source_version]}"
     action :nothing
   end
 
@@ -128,15 +130,12 @@ if node[:mod_security][:from_source]
     conf true
     # The following attributes are only used by the apache2 cookbook on rhel, fedora, arch, suse and freebsd
     # as it only drop off a .load file for those platforms
-    identifier 'security2_module'
-    module_path '/usr/local/modsecurity/lib/mod_security2.so'
-#    filename 'mod_security2.so'
+    identifier node[:mod_security][:source_module_identifier]
+    module_path "#{node[:mod_security][:source_module_path]}/#{node[:mod_security][:source_module_name]}"
   end
 
-  # FIXME: Should probably not just link this and include it in the cookbook
-  # or otherwise not depend on the source dir always being there
-  link "#{node[:mod_security][:dir]}/unicode.mapping" do
-    to "#{node[:mod_security][:dir]}/source/modsecurity-apache_#{node[:mod_security][:source_version]}/unicode.mapping"
+  cookbook_file "unicode.mapping" do
+    path "#{node[:mod_security][:dir]}/unicode.mapping"
     action :create
     notifies :restart, 'service[apache2]', :delayed
   end
