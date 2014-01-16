@@ -1,17 +1,18 @@
 # install package common to package and source install
 case node[:platform_family]
-when "rhel","fedora","suse"
+when 'rhel', 'fedora', 'suse'
   packages = %w[apr apr-util pcre-devel libxml2-devel curl-devel]
-when "ubuntu","debian"
+when 'ubuntu', 'debian'
   packages = %w[libapr1 libaprutil1 libpcre3 libxml2 libcurl3]
-when "arch"
+when 'arch'
   packages = %w[apr apr-util pcre libxml2 lib32-curl]
-when "freebsd"
+when 'freebsd'
   packages = %w[apr pcre-8.33 libxml2 curl]
-else 
-  raise "#{node[:platform_family]} is not a supported platform"
+else
+  Chef::Log.fatal("Unsupported platform: #{node[:platform_family]}.")
+  fail 'mod_security cookbook does not support this platform'
 end
-packages.each {|p| package p}
+packages.each { |p| package p }
 
 # FIXME: ignoring lua for right now
 # make optional in the future
@@ -19,13 +20,13 @@ packages.each {|p| package p}
 if node[:mod_security][:from_source]
   # COMPILE FROM SOURCE
 
-  #install required libs
+  # install required libs
 
   case node[:platform_family]
-  when "arch"
+  when 'arch'
     # OH NOES
-  when "rhel","fedora","suse"
-    package "httpd-devel"
+  when 'rhel', 'fedora', 'suse'
+    package 'httpd-devel'
     if node[:platform_version].to_f < 6.0
       package 'curl-devel'
     else
@@ -33,7 +34,7 @@ if node[:mod_security][:from_source]
       package 'openssl-devel'
       package 'zlib-devel'
     end
-  when "debian"
+  when 'debian'
     apache_development_package =  if %w( worker threaded ).include? node[:mod_security][:apache_mpm]
                                     'apache2-threaded-dev'
                                   else
@@ -54,75 +55,76 @@ if node[:mod_security][:from_source]
   remote_file source_code_tar_file do
     action :create_if_missing
     source node[:mod_security][:source_dl_url]
-    mode "0644"
+    mode '0644'
     checksum node[:mod_security][:source_checksum] # Not a checksum check for security. Will be unused with create_if_missing.
     backup false
-    notifies :create, "ruby_block[validate_tarball_checksum]", :immediately
+    notifies :create, 'ruby_block[validate_tarball_checksum]', :immediately
   end
 
-  ruby_block "validate_tarball_checksum" do
+  ruby_block 'validate_tarball_checksum' do
     action :nothing
     block do
       require 'digest'
       checksum = Digest::SHA256.file(source_code_tar_file).hexdigest
       if checksum != node[:mod_security][:source_checksum]
-        raise "Downloaded Tarball Checksum #{checksum} does not match known checksum #{node[:mod_security][:source_checksum]}"
+        Chef::Log.fatal("Downloaded source tarball checksum #{checksum} does not match known checksum #{node[:mod_security][:source_checksum]}")
+        fail 'Downloaded source tarball did not match known checksum'
       end
     end
-    notifies :run, "execute[unpack_mod_security_source_tarball]", :immediately
+    notifies :run, 'execute[unpack_mod_security_source_tarball]', :immediately
   end
 
-  execute "unpack_mod_security_source_tarball" do
+  execute 'unpack_mod_security_source_tarball' do
     command "tar -xvzf #{node[:mod_security][:source_file]}"
     action :nothing
     cwd "#{node[:mod_security][:dir]}/source"
-    notifies :run, "execute[configure_mod_security]", :immediately
+    notifies :run, 'execute[configure_mod_security]', :immediately
   end
 
-  execute "configure_mod_security" do
-    command "./configure"
+  execute 'configure_mod_security' do
+    command './configure'
     cwd "#{node[:mod_security][:dir]}/source/modsecurity-apache_#{node[:mod_security][:source_version]}"
     action :nothing
-    notifies :run, "execute[make_mod_security]", :immediately
+    notifies :run, 'execute[make_mod_security]', :immediately
   end
 
-  execute "make_mod_security" do
-    command "make clean && make && make mlogc"
+  execute 'make_mod_security' do
+    command 'make clean && make && make mlogc'
     cwd "#{node[:mod_security][:dir]}/source/modsecurity-apache_#{node[:mod_security][:source_version]}"
     action :nothing
-    notifies :run, "execute[install_mod_security]", :immediately
+    notifies :run, 'execute[install_mod_security]', :immediately
   end
 
-  execute "install_mod_security" do
-    command "make install"
+  execute 'install_mod_security' do
+    command 'make install'
     cwd "#{node[:mod_security][:dir]}/source/modsecurity-apache_#{node[:mod_security][:source_version]}"
     action :nothing
   end
 
   # setup apache module loading
-  apache_module "unique_id"
+  apache_module 'unique_id'
 
-  if !platform_family?('rhel', 'fedora', 'arch', 'suse', 'freebsd')
+  unless platform_family?('rhel', 'fedora', 'arch', 'suse', 'freebsd')
     template "#{node[:apache][:dir]}/mods-available/mod-security.load" do
-      source "mods/mod-security.load.erb"
+      source 'mods/mod-security.load.erb'
       owner node[:apache][:user]
       group node[:apache][:group]
       mode 0644
-      #backup false
-      notifies :restart, "service[apache2]", :delayed
+      # backup false
+      notifies :restart, 'service[apache2]', :delayed
     end
   end
 
   template "#{node[:apache][:dir]}/mods-available/mod-security.conf" do
-    source "mods/mod-security.conf.erb"
+    source 'mods/mod-security.conf.erb'
     owner node[:apache][:user]
     group node[:apache][:group]
     mode 0644
-    #backup false
-    notifies :restart, "service[apache2]", :delayed
+    # backup false
+    notifies :restart, 'service[apache2]', :delayed
   end
 
-  apache_module "mod-security" do
+  apache_module 'mod-security' do
     conf true
     # The following attributes are only used by the apache2 cookbook on rhel, fedora, arch, suse and freebsd
     # as it only drop off a .load file for those platforms
@@ -134,20 +136,20 @@ if node[:mod_security][:from_source]
   # FIXME: Should probably not just link this and include it in the cookbook
   # or otherwise not depend on the source dir always being there
   link "#{node[:mod_security][:dir]}/unicode.mapping" do
-      to "#{node[:mod_security][:dir]}/source/modsecurity-apache_#{node[:mod_security][:source_version]}/unicode.mapping"
-      action :create
-      notifies :restart, "service[apache2]", :delayed
+    to "#{node[:mod_security][:dir]}/source/modsecurity-apache_#{node[:mod_security][:source_version]}/unicode.mapping"
+    action :create
+    notifies :restart, 'service[apache2]', :delayed
   end
 
 else
   # INSTALL FROM PACKAGE
   case node[:platform_family]
-  when "rhel","fedora","suse"
-    package "mod_security"
-  when "debian"
-    package "libapache-mod-security"
-  when "arch"
-    package "modsecurity-apache"
+  when 'rhel', 'fedora', 'suse'
+    package 'mod_security'
+  when 'debian'
+    package 'libapache-mod-security'
+  when 'arch'
+    package 'modsecurity-apache'
   end
 end
 
@@ -155,12 +157,12 @@ directory node[:mod_security][:rules] do
   recursive true
 end
 
-template "modsecurity.conf" do
+template 'modsecurity.conf' do
   path node[:mod_security][:base_config]
-  source "modsecurity.conf.erb"
+  source 'modsecurity.conf.erb'
   owner node[:apache][:user]
   group node[:apache][:group]
   mode 0644
   backup false
-  notifies :restart, "service[apache2]"
+  notifies :restart, 'service[apache2]'
 end
