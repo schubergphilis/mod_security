@@ -28,6 +28,7 @@ define :mod_secure_proxy, :enable => true do
   my_params = params
   
   web_app params[:name] do
+    cookbook "mod_security"
     template "mod_secure_proxy.conf.erb"
     server_name my_params[:server_name]
     server_aliases my_params[:server_aliases] 
