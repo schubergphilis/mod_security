@@ -1,13 +1,12 @@
-Description
-===========
+# Description
 
 Ever wanted a little guardian angel to protect your chef deployed
 servers from the bad guys?  Like a bad-ass Jiminy Cricket on your
-shoulder?  
+shoulder?
 
 This package is to make deployment and testing of mod_security easier
-with chef.  Right now it centers entirely around the OWASP Core Rule
-Sets of mod_security rules.  In future, it will allow you to manage/deploy
+with Chef. Right now it centers entirely around the OWASP Core Rule
+Sets of mod_security rules. In future, it will allow you to manage/deploy
 custom rule/rulesets of your own.
 
 There are 2 main use cases right now:
@@ -15,17 +14,16 @@ There are 2 main use cases right now:
 ## Install on a real production server
 
 * Adjust the attributes to your liking and install the default
-  recipe.  
-  
+  recipe.
+
 ## Find out what ModSecurity could do for your site in less than
    15-minutes.
-   
-* Setup a base chef recipe for a server.  Ubuntu 10.04 on Rackspace
-  Cloud is pretty easy (and what I've tested with)
+
+* Setup a base chef recipe for a server.
 * Set it to install the default recipe
 * Create a cookbook to reverse proxy to your real server sorta like
   this:
-<pre>  
+<pre>
 mod_secure_proxy "my_site" do
   server_name "www.mysite.com"
   enable_https true # if you want to proxy https too
@@ -37,8 +35,7 @@ end
 * Look at /var/log/modsec.log and see what you could be blocking
 * Change the "DetectOnly" attribute to "On" and test some more
 
-Requirements
-============
+# Requirements
 
 ## Cookbooks
 
@@ -47,31 +44,28 @@ This cookbook depends on apache2 and build-essential
 ## Platforms
 
 ### Supported
-* Ubuntu (tested on 10.04)
-* Debian
-* RedHat
-* CentOS (tested on 5.6)
-* Fedora
-* Scientific?
+* Ubuntu (tested on 12.04 and 13.04)
+* Debian (tested on 6.0.8 and 7.2.0)
+* RedHat (untested)
+* CentOS (tested on 6.5)
+* Fedora (untested)
+* FreeBSD (untested)
 
 ### Coming Soon
 * Arch (anything else that apache2 supports)
 
-Attributes
-==========
+# Attributes
 
 Major ones will be documented soon.  For right now check the
 attributes file.  A few suggestions
 
 * Compile from source.  I normally prefer not to do this, but some
   core rules break if you don't
-* The core rules are in the cookbook because old version seem to
-  disappear from sourceforge, and that sucks if you're maintaining a
-  large deployment.  
-* Base rules should generally be safe.  the other groups much less
-  so. There are some rules with inconsistently named data files that
-  will need to be fixed.
-  
+* The core rules are downloaded from the SpiderLabs GitHub releases.
+* Base rules should generally be safe, the other groups much less
+  so. There are some rules with inconsistently named data files that are
+  fixed by this cookbook.
+
 Recipes
 =======
 
@@ -84,22 +78,6 @@ install_base
 
 install_owasp_core_rule_set
 ---------------------------
-
-Changes
-=======
-
-* 0.0.6 
- * version bump to fix packaging issue
-* 0.0.5
- * add server alias support for mod_secure_proxy definition
- * test and fix data file loading issues in main,srl, and optional rulesets
- * identify experimental rulesets that don't work in our environment yet
-* 0.0.3/0.0.4
- * add RedHat-based distro support
-* 0.0.2 
- * upgrade to mod_security 2.6.2
- * flesh out main config options as chef attributes
-* 0.0.1 First release
 
 License and Authors
 ===================
