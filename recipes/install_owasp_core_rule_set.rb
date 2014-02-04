@@ -45,7 +45,7 @@ node[:mod_security][:crs][:rules].each_pair do |rule_group,rules|
     # deal with data_files
     data_filename = case rule
     when "modsecurity_crs_35_bad_robots"
-      "modsecurity_35_scanners.data"
+      ["modsecurity_35_scanners.data", "modsecurity_35_bad_robots.data"]
     when "modsecurity_crs_50_outbound"
       "modsecurity_50_outbound_malware.data"
     when "modsecurity_crs_46_slr_et_joomla_attacks"
@@ -65,14 +65,24 @@ node[:mod_security][:crs][:rules].each_pair do |rule_group,rules|
     else
       # why does the crs disappear from the data filenames? why!?
       "#{rule.gsub(/crs_/,'')}.data"
-    end 
-    
-    link "#{node[:mod_security][:crs][:activated_rules]}/#{data_filename}" do
-      to "#{rule_dir}/#{data_filename}"
-      action (flag ? :create : :delete )
-      only_if "test -e #{rule_dir}/#{data_filename}"
-      notifies :restart, resources(:service => "apache2"), :delayed
     end
-    
+
+    if data_filename.is_a?(Array)
+      data_filename.each do |filename|
+        link "#{node[:mod_security][:crs][:activated_rules]}/#{filename}" do
+          to "#{rule_dir}/#{filename}"
+          action (flag ? :create : :delete )
+          only_if "test -e #{rule_dir}/#{filename}"
+          notifies :restart, resources(:service => "apache2"), :delayed
+        end
+      end
+    else
+      link "#{node[:mod_security][:crs][:activated_rules]}/#{data_filename}" do
+        to "#{rule_dir}/#{data_filename}"
+        action (flag ? :create : :delete )
+        only_if "test -e #{rule_dir}/#{data_filename}"
+        notifies :restart, resources(:service => "apache2"), :delayed
+      end
+    end
   end
-end 
+end
