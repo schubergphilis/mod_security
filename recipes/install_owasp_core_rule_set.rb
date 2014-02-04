@@ -45,7 +45,7 @@ node[:mod_security][:crs][:rules].each_pair do |rule_group,rules|
     # deal with data_files
     data_filename = case rule
     when "modsecurity_crs_35_bad_robots"
-      ["modsecurity_35_scanners.data", "modsecurity_35_bad_robots"]
+      ["modsecurity_35_scanners.data", "modsecurity_35_bad_robots.data"]
     when "modsecurity_crs_50_outbound"
       "modsecurity_50_outbound_malware.data"
     when "modsecurity_crs_46_slr_et_joomla_attacks"
