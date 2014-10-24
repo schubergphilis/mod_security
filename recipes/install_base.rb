@@ -17,6 +17,11 @@ packages.each { |p| package p }
 # FIXME: ignoring lua for right now
 # make optional in the future
 
+directory node[:mod_security][:dir] do
+  recursive true
+end
+
+
 if node[:mod_security][:from_source]
   # COMPILE FROM SOURCE
 
@@ -45,7 +50,6 @@ if node[:mod_security][:from_source]
     end
   end
 
-  directory "#{node[:mod_security][:dir]}"
 
   # Download and compile mod_security from source
 
@@ -103,44 +107,10 @@ if node[:mod_security][:from_source]
     action :nothing
   end
 
-  # setup apache module loading
-  apache_module 'unique_id'
-
-  unless platform_family?('rhel', 'fedora', 'arch', 'suse', 'freebsd')
-    template "#{node[:apache][:dir]}/mods-available/mod-security.load" do
-      source 'mods/mod-security.load.erb'
-      owner node[:apache][:user]
-      group node[:apache][:group]
-      mode 0644
-      # backup false
-      notifies :restart, 'service[apache2]', :delayed
-    end
-  end
-
-  template "#{node[:apache][:dir]}/mods-available/mod-security.conf" do
-    source 'mods/mod-security.conf.erb'
-    owner node[:apache][:user]
-    group node[:apache][:group]
-    mode 0644
-    # backup false
-    notifies :restart, 'service[apache2]', :delayed
-  end
-
-  apache_module 'mod-security' do
-    conf true
-    # The following attributes are only used by the apache2 cookbook on rhel, fedora, arch, suse and freebsd
-    # as it only drop off a .load file for those platforms
-    identifier node[:mod_security][:source_module_identifier]
-    module_path "#{node[:mod_security][:source_module_path]}/#{node[:mod_security][:source_module_name]}"
-  end
-
-  cookbook_file "unicode.mapping" do
-    path "#{node[:mod_security][:dir]}/unicode.mapping"
-    action :create
-    notifies :restart, 'service[apache2]', :delayed
-  end
+  libdir="#{node[:mod_security][:source_module_path]}"
 
 else
+
   # INSTALL FROM PACKAGE
   case node[:platform_family]
   when 'rhel', 'fedora', 'suse'
@@ -150,6 +120,50 @@ else
   when 'arch'
     package 'modsecurity-apache'
   end
+
+  libdir="#{node['apache']['libexec_dir']}"
+
+end
+
+
+# setup apache module loading
+apache_module 'unique_id'
+
+unless platform_family?('rhel', 'fedora', 'arch', 'suse', 'freebsd')
+  template "#{node[:apache][:dir]}/mods-available/mod-security.load" do
+    source 'mods/mod-security.load.erb'
+    owner node[:apache][:user]
+    group node[:apache][:group]
+    mode 0644
+    # backup false
+    variables(
+      :libdir => libdir
+     )
+    notifies :restart, 'service[apache2]', :delayed
+  end
+end
+
+template "#{node[:apache][:dir]}/mods-available/mod-security.conf" do
+  source 'mods/mod-security.conf.erb'
+  owner node[:apache][:user]
+  group node[:apache][:group]
+  mode 0644
+  # backup false
+  notifies :restart, 'service[apache2]', :delayed
+end
+
+apache_module 'mod-security' do
+  conf true
+  # The following attributes are only used by the apache2 cookbook on rhel, fedora, arch, suse and freebsd
+  # as it only drop off a .load file for those platforms
+  identifier node[:mod_security][:source_module_identifier]
+  module_path "#{libdir}/#{node[:mod_security][:source_module_name]}"
+end
+
+cookbook_file "unicode.mapping" do
+  path "#{node[:mod_security][:dir]}/unicode.mapping"
+  action :create
+  notifies :restart, 'service[apache2]', :delayed
 end
 
 directory node[:mod_security][:rules] do
