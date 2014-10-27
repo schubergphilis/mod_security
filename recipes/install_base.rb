@@ -129,24 +129,22 @@ end
 # setup apache module loading
 apache_module 'unique_id'
 
-unless platform_family?('rhel', 'fedora', 'arch', 'suse', 'freebsd')
-  template "#{node[:apache][:dir]}/mods-available/mod-security.load" do
-    source 'mods/mod-security.load.erb'
-    owner node[:apache][:user]
-    group node[:apache][:group]
-    mode 0644
-    # backup false
-    variables(
-      :libdir => libdir
-     )
-    notifies :restart, 'service[apache2]', :delayed
-  end
+template "#{node[:apache][:dir]}/mods-available/mod-security.load" do
+  source 'mods/mod-security.load.erb'
+  owner 'root'
+  group 'root'
+  mode 0644
+  # backup false
+  variables(
+    :libdir => libdir
+   )
+  notifies :restart, 'service[apache2]', :delayed
 end
 
 template "#{node[:apache][:dir]}/mods-available/mod-security.conf" do
   source 'mods/mod-security.conf.erb'
-  owner node[:apache][:user]
-  group node[:apache][:group]
+  owner 'root'
+  group 'root'
   mode 0644
   # backup false
   notifies :restart, 'service[apache2]', :delayed
@@ -173,8 +171,8 @@ end
 template 'modsecurity.conf' do
   path node[:mod_security][:base_config]
   source 'modsecurity.conf.erb'
-  owner node[:apache][:user]
-  group node[:apache][:group]
+  owner 'root'
+  group 'root'
   mode 0644
   backup false
   notifies :restart, 'service[apache2]'
