@@ -22,16 +22,30 @@ default[:mod_security][:source_module_path]    = '/usr/local/modsecurity/lib' #F
 default[:mod_security][:source_module_identifier] = 'security2_module'
 default[:mod_security][:rules]                 = "#{node[:mod_security][:dir]}/rules"
 
-# core rule set locations
+# core rule set config
+default[:mod_security][:crs][:bundled]         = false
 default[:mod_security][:crs][:version]         = '2.2.8'
-default[:mod_security][:crs][:file_url]        = "#{node[:mod_security][:crs][:version]}.tar.gz"
-default[:mod_security][:crs][:file_name]       = "owasp-modsecurity-crs-#{node[:mod_security][:crs][:file_url]}"
-default[:mod_security][:crs][:checksum]        = '183c6a912b142ca226c9401b281d5a763378efe993572e0a3e93b550161e404f'
-default[:mod_security][:crs][:dl_server]       = 'https://github.com/SpiderLabs/owasp-modsecurity-crs/archive/'
-default[:mod_security][:crs][:dl_url]          = "#{node[:mod_security][:crs][:dl_server]}#{node[:mod_security][:crs][:file_url]}"
 default[:mod_security][:crs][:root_dir]        = "#{node[:mod_security][:dir]}/crs"
 default[:mod_security][:crs][:rules_root_dir]  = "#{node[:mod_security][:crs][:root_dir]}/rules"
 default[:mod_security][:crs][:activated_rules] = "#{node[:mod_security][:crs][:rules_root_dir]}/activated_rules"
+
+# core rule set download config
+if ( not node[:mod_security][:crs][:bundled] )
+  default[:mod_security][:crs][:file_url]        = "#{node[:mod_security][:crs][:version]}.tar.gz"
+  default[:mod_security][:crs][:file_name]       = "owasp-modsecurity-crs-#{node[:mod_security][:crs][:file_url]}"
+  if node[:mod_security][:crs][:version] == "2.2.8"
+    default[:mod_security][:crs][:checksum]        = '183c6a912b142ca226c9401b281d5a763378efe993572e0a3e93b550161e404f'
+  elsif node[:mod_security][:crs][:version] == "2.2.9"
+    default[:mod_security][:crs][:checksum]        = '203669540abf864d40e892acf2ea02ec4ab47f9769747d28d79b6c2a501e3dfc'
+#  elsif node[:mod_security][:crs][:version] == "3.0.0"
+#    default[:mod_security][:crs][:checksum]        = '47172ab598ecff73129aa80e457863c70fa7f719d5e812d5db0416c4aab32349'
+  end
+  default[:mod_security][:crs][:dl_server]       = 'https://github.com/SpiderLabs/owasp-modsecurity-crs/archive/'
+  default[:mod_security][:crs][:dl_url]          = "#{node[:mod_security][:crs][:dl_server]}#{node[:mod_security][:crs][:file_url]}"
+end
+
+# custom rule set config
+default[:mod_security][:custom][:root_dir]        = "#{node[:mod_security][:dir]}/rules"
 
 ##########
 # Base Configuration
@@ -139,3 +153,22 @@ default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_45_char_ano
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_55_response_profiling] = false # LUA?
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_56_pvs_checks] = false
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_61_ip_forensics] = false # Unknown action? dependency
+
+
+##########
+# Custom Rule Set - RULES!
+##########
+
+default[:mod_security][:custom][:rules][:example] = [ 
+	"# This is an example custom rule file",
+	"# Chef managed file, manual updates will be lost"
+]
+
+##########
+# Custom Rule Set - DATA FILES!
+##########
+
+default[:mod_security][:custom][:datafiles][:example] = [ 
+	"# This is an example custom data file",
+	"# Chef managed file, manual updates will be lost"
+]

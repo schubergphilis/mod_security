@@ -61,17 +61,21 @@ attributes file.  A few suggestions
 
 * Compile from source.  I normally prefer not to do this, but some
   core rules break if you don't
-* The core rules are downloaded from the SpiderLabs GitHub releases.
+* crs->bundled determines if the bundled version of the crs should be used or 
+  if the core rules are downloaded from the SpiderLabs GitHub releases.
 * Base rules should generally be safe, the other groups much less
   so. There are some rules with inconsistently named data files that are
   fixed by this cookbook.
+* custom->rules allows you to install your own custom rules
+* custom->datafiles allows you to install your own data files to be used in 
+  pmFromFile directives
 
 Recipes
 =======
 
 default
 -------
-This installs base and the OWASP core rule set currently.
+This installs base, the OWASP core rule set and your own custom rules currently.
 
 install_base
 ------------
@@ -79,10 +83,17 @@ install_base
 install_owasp_core_rule_set
 ---------------------------
 
+install_custom_rule_set
+-----------------------
+Reads custom->rules and custom->datafiles properties and creates .conf and .data 
+files based on their contents in mod_security/rules which is included by the default
+mod_security.conf file
+
 License and Authors
 ===================
 
 Author:: Jason Rohwedder <jro@honeyapps.com>
+Author:: Frank Breedijk <fbreedijk@schubergphilis.com>
 
 Copyright:: 2011, HoneyApps, Inc
 
