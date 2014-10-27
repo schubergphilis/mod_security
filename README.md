@@ -61,7 +61,8 @@ attributes file.  A few suggestions
 
 * Compile from source.  I normally prefer not to do this, but some
   core rules break if you don't
-* The core rules are downloaded from the SpiderLabs GitHub releases.
+* crs->bundled determines if the bundled version of the crs should be used or 
+  if the core rules are downloaded from the SpiderLabs GitHub releases.
 * Base rules should generally be safe, the other groups much less
   so. There are some rules with inconsistently named data files that are
   fixed by this cookbook.

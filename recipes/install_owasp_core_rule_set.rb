@@ -1,26 +1,38 @@
-
-package 'tar' do
-  action :install
-end
-
-directory node[:mod_security][:crs][:rules_root_dir] do
-  recursive true
-end
-
-# download and install Core Rule Set
-crs_tar_file = "#{Chef::Config[:file_cache_path]}/#{node[:mod_security][:crs][:file_name]}"
-remote_file crs_tar_file do
-  action :create
-  source node[:mod_security][:crs][:dl_url]
-  mode '0644'
-  checksum node[:mod_security][:crs][:checksum] # Not a checksum check for security. Will be unused with create_if_missing.
-  backup false
-  not_if do
-    # FIXME: Only checks for the existence of the .example file i.e. rules already in place. Doesn't check the version of the rules is as specified.
-    File.exists?("#{node[:mod_security][:crs][:root_dir]}/modsecurity_crs_10_setup.conf.example")
+# Do we need to do a bundled or download install?
+if node[:mod_security][:crs][:bundled] 
+  # Bundled install
+  remote_directory "owasp-modsecurity-crs-#{node[:mod_security][:crs][:version]}" do
+    path  node[:mod_security][:crs][:rules_root_dir]
+    owner "root"
+    group "root"
+    mode  "0755"
+    action :create
   end
-  notifies :create, 'ruby_block[validate_crs_tarball_checksum]', :immediately
-end
+else
+  # DOWNLOAD install
+  package 'tar' do
+    action :install
+  end
+
+  directory node[:mod_security][:crs][:rules_root_dir] do
+    recursive true
+  end
+
+  # download and install Core Rule Set
+  crs_tar_file = "#{Chef::Config[:file_cache_path]}/#{node[:mod_security][:crs][:file_name]}"
+  remote_file crs_tar_file do
+    action :create
+    source node[:mod_security][:crs][:dl_url]
+    mode '0644'
+    checksum node[:mod_security][:crs][:checksum] # Not a checksum check for security. Will be unused with create_if_missing.
+    backup false
+    not_if do
+      # FIXME: Only checks for the existence of the .example file i.e. rules already in place. Doesn't check the version of the rules is as specified.
+      File.exists?("#{node[:mod_security][:crs][:root_dir]}/modsecurity_crs_10_setup.conf.example")
+    end
+    notifies :create, 'ruby_block[validate_crs_tarball_checksum]', :immediately
+  end
+end #bundled?
 
 ruby_block 'validate_crs_tarball_checksum' do
   action :nothing
