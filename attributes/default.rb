@@ -127,7 +127,6 @@ default[:mod_security][:crs][:rules][:optional][:modsecurity_crs_16_authenticati
 default[:mod_security][:crs][:rules][:optional][:modsecurity_crs_16_session_hijacking] = false
 default[:mod_security][:crs][:rules][:optional][:modsecurity_crs_16_username_tracking] = false
 default[:mod_security][:crs][:rules][:optional][:modsecurity_crs_25_cc_known] = false
-default[:mod_security][:crs][:rules][:optional][:modsecurity_crs_40_experimental] = false
 default[:mod_security][:crs][:rules][:optional][:modsecurity_crs_42_comment_spam] = false
 default[:mod_security][:crs][:rules][:optional][:modsecurity_crs_43_csrf_protection] = false
 default[:mod_security][:crs][:rules][:optional][:modsecurity_crs_46_av_scanning] = false
@@ -139,21 +138,60 @@ default[:mod_security][:crs][:rules][:optional][:modsecurity_crs_55_marketing] =
 # Experimental rules.  There be monstars here! Maybe.
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_11_brute_force] = false
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_11_dos_protection] = false
-default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_11_proxy_abuse] = false # FIXME: hardcoded data file
+default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_11_proxy_abuse] = false 
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_11_slow_dos_protection] = false
+default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_16_scanner_integration] = false
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_25_cc_track_pan] = false
-default[:mod_security][:crs][:rules][:experimental]['modsecurity_crs_40_appsensor_detection_point_2.0_setup'] = false # LUA
-default[:mod_security][:crs][:rules][:experimental]['modsecurity_crs_40_appsensor_detection_point_2.1_request_exception'] = false # LUA?
-default[:mod_security][:crs][:rules][:experimental]['modsecurity_crs_40_appsensor_detection_point_2.9_honeytrap'] = false # LUA?
-default[:mod_security][:crs][:rules][:experimental]['modsecurity_crs_40_appsensor_detection_point_3.0_end'] = false # LUA?
+default[:mod_security][:crs][:rules][:experimental]['modsecurity_crs_40_appsensor_detection_point_2.0_setup'] = false 
+default[:mod_security][:crs][:rules][:experimental]['modsecurity_crs_40_appsensor_detection_point_2.1_request_exception'] = false 
+default[:mod_security][:crs][:rules][:experimental]['modsecurity_crs_40_appsensor_detection_point_2.9_honeytrap'] = false 
+default[:mod_security][:crs][:rules][:experimental]['modsecurity_crs_40_appsensor_detection_point_3.0_end'] = false 
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_40_http_parameter_pollution] = false
-default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_41_advanced_filters] = false # LUA?
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_42_csp_enforcement] = false
-default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_45_char_anomaly] = false
-default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_55_response_profiling] = false # LUA?
-default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_56_pvs_checks] = false
-default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_61_ip_forensics] = false # Unknown action? dependency
+default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_46_scanner_integration] = false
+default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_48_bayes_analysis] = false
+default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_55_response_profiling] = false 
+default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_56_pvi_checks] = false
+default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_61_ip_forensics] = false 
 
+###
+# Per rule settings
+#
+# These settings allow you to turn individual rules off or set rule specific parameters
+#
+###
+
+default[:mod_security][:disabled_rules] = [ 
+	"960014", # base/modsecurity_crs_20_protocol_violations, rule is disabled by default
+	"960913", # base/modsecurity_crs_21_protocol_anomalies, rule is disabled by default
+	"950103_weaker", # base/modsecurity_crs_42_tight_security, rule is disabled by default
+	"981033", # optional/modsecurity_crs_11_avs_traffic, rule is disabled by default
+	"981034", # optional/modsecurity_crs_11_avs_traffic, rule is disabled by default
+	"981035", # optional/modsecurity_crs_11_avs_traffic, rule is disabled by default
+	"981075", # optional/modsecurity_crs_16_username_tracking, rule is disabled by default
+	"981076", # optional/modsecurity_crs_16_username_tracking, rule is disabled by default
+	"981077", # optional/modsecurity_crs_16_username_tracking, rule is disabled by default
+	"920013", # optional/modsecurity_crs_25_cc_known, rule is disabled by default
+	"920014", # optional/modsecurity_crs_25_cc_known, rule is disabled by default
+	"900030", # experimental/modsecurity_crs_16_scanner_integration, rule is disabled by default
+	"900031", # experimental/modsecurity_crs_16_scanner_integration, rule is disabled by default
+	"981083", # experimental/modsecurity_crs_40_appsensor_detection_point_2.0_setup.conf, rule is disabled by default
+	"981084", # experimental/modsecurity_crs_40_appsensor_detection_point_2.0_setup.conf, rule is disabled by default
+]
+default[:mod_security][:rule_parameters][:optional]['981033'] = '192.168.1.' # Example AVS
+default[:mod_security][:rule_parameters][:optional]['981034'] = '192.168.1.101' # Example AVS
+default[:mod_security][:rule_parameters][:optional]['981035'] = '192.168.1.101' # Example AVS
+default[:mod_security][:rule_parameters][:optional]['981075'] = '^/(?:(admin|account\/login\.jsp$))' # Example location match for username monitoring
+default[:mod_security][:rule_parameters][:optional]['950115'] = '/bin/runAV' # Example virus scanning command
+default[:mod_security][:rule_parameters][:experimental]['981050'] = '/usr/local/apache/conf/modsec/GeoLiteCity.dat' # Example GeoLookupDB
+default[:mod_security][:rule_parameters][:experimental]['981198'] = '/usr/local/apache/conf/modsec_current/base_rules/osvdb.lua' # OSVB integration lua script
+default[:mod_security][:rule_parameters][:experimental]['900036'] = '/usr/local/apache/conf/crs/lua/gather_ip_data.lua' # IP data lua script
+default[:mod_security][:rule_parameters][:experimental]['900039'] = '/usr/local/apache/conf/modsec_current/base_rules/GeoLiteCity.dat' # Example GeoLookupDB
+default[:mod_security][:rule_parameters][:experimental]['SecReadStateLimit'] = 100 # SecReadStateLimit
+default[:mod_security][:rule_parameters][:experimental]['RequestReadTimeoutBody'] = 30 # Request Read Timeout on body
+default[:mod_security][:rule_parameters][:experimental]['981086'] = '/opt/modsecurity/etc/crs/lua/appsensor_request_exception_enforce.lua' # AppSensor lua script
+default[:mod_security][:rule_parameters][:experimental]['981102'] = '/opt/modsecurity/etc/crs/lua/appsensor_request_exception_profile.lua' # AppSensor lua script
+default[:mod_security][:rule_parameters][:experimental]['981187'] = 'profile_page_scripts.lua' # Profile page lua script
 
 ##########
 # Custom Rule Set - RULES!
