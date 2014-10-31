@@ -18,14 +18,14 @@
 #
 # White-list ASV network block (no blocking or logging of AVS traffic)
 # Update IP network block as appropriate for your AVS traffic
-#SecRule REMOTE_ADDR "@beginsWith 192.168.1." "phase:1,id:'981033',t:none,nolog,pass,allow"
+<%= @disabled.include?("981033") ? "#" : "" %>SecRule REMOTE_ADDR "@beginsWith <%= @parameters['981033'] %>" "phase:1,id:'981033',t:none,nolog,pass,allow"
 
 #
 # Recommended "Block but Don't Log" rule for scanning traffic
 # Update IP address/network block as appropriate for your ASV traffic
-#SecRule REMOTE_ADDR "@streq 192.168.1.101" "phase:1,id:'981034',t:none,nolog,pass,ctl:auditEngine=Off"
+<%= @disabled.include?("981034") ? "#" : "" %>SecRule REMOTE_ADDR "@streq <%= @parameters['981034'] %>" "phase:1,id:'981034',t:none,nolog,pass,ctl:auditEngine=Off"
 
 # Recommended phase 3 rule that will re-enable the audit engine if the request
 # was not blocked by one of the normal rules.
 # Update IP address/network block as appropriate for your ASV traffic
-#SecRule REMOTE_ADDR "@streq 192.168.1.101" "phase:3,id:'981035',t:none,nolog,pass,ctl:auditEngine=On" 
+<%= @disabled.include?("981035") ? "#" : "" %>SecRule REMOTE_ADDR "@streq <%= @parameters['981035'] %>" "phase:3,id:'981035',t:none,nolog,pass,ctl:auditEngine=On" 

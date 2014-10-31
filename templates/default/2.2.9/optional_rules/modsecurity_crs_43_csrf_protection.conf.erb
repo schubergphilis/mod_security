@@ -28,18 +28,18 @@ SecContentInjection On
 # Limitations - this implementation does not currently work with AJAX
 #
 <LocationMatch .*>
-SecRule &ARGS "@ge 1" "chain,phase:2,id:'981143',t:none,block,msg:'CSRF Attack Detected - Missing CSRF Token.'"
- SecRule &ARGS:CSRF_TOKEN "!@eq 1" "setvar:'tx.msg=%{rule.msg}',setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/CSRF-%{matched_var_name}=%{matched_var}"
+<%= @disabled.include?("981143") ? "#" : "" %>SecRule &ARGS "@ge 1" "chain,phase:2,id:'981143',t:none,block,msg:'CSRF Attack Detected - Missing CSRF Token.'"
+<%= @disabled.include?("981143") ? "#" : "" %> SecRule &ARGS:CSRF_TOKEN "!@eq 1" "setvar:'tx.msg=%{rule.msg}',setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/CSRF-%{matched_var_name}=%{matched_var}"
 
-SecRule &ARGS "@ge 1" "chain,phase:2,id:'981144',t:none,block,msg:'CSRF Attack Detected - Invalid Token.'"
- SecRule ARGS:CSRF_TOKEN "!@streq %{SESSION.CSRF_TOKEN}" "setvar:'tx.msg=%{rule.msg}',setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/CSRF-%{matched_var_name}=%{matched_var}"
+<%= @disabled.include?("981144") ? "#" : "" %>SecRule &ARGS "@ge 1" "chain,phase:2,id:'981144',t:none,block,msg:'CSRF Attack Detected - Invalid Token.'"
+<%= @disabled.include?("981144") ? "#" : "" %> SecRule ARGS:CSRF_TOKEN "!@streq %{SESSION.CSRF_TOKEN}" "setvar:'tx.msg=%{rule.msg}',setvar:tx.anomaly_score=+%{tx.critical_anomaly_score},setvar:tx.%{rule.id}-WEB_ATTACK/CSRF-%{matched_var_name}=%{matched_var}"
 
 
 
 #
 # This rule will use Content Injection to append the CSRF Token 
 #
-SecRule &SESSION:CSRF_TOKEN "@eq 1" "phase:4,id:'981145',t:none,nolog,pass,append:'<html><script language=\"JavaScript\"> \
+<%= @disabled.include?("981145") ? "#" : "" %>SecRule &SESSION:CSRF_TOKEN "@eq 1" "phase:4,id:'981145',t:none,nolog,pass,append:'<html><script language=\"JavaScript\"> \
 \
 var tokenName = \'CSRF_TOKEN\'; \
 var tokenValue = \'%{session.csrf_token}\'; \

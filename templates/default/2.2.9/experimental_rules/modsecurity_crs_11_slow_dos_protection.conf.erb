@@ -17,7 +17,7 @@
 # 
 # Mitigate Slowloris-type slow HTTP attacks
 #
-SecReadStateLimit 100 
+SecReadStateLimit <%= @parameters['SecReadStateLimit'] %> 
 
 #
 # Mitigate Slow HTTP POST attacks
@@ -27,9 +27,9 @@ SecReadStateLimit 100
 # that will allow any legitimate slow clients or large file uplaods.
 #
 <IfModule reqtimeout_module>
-RequestReadTimeout body=30 
+RequestReadTimeout body=<%= @parameters['RequestReadTimeoutBody'] %> 
 </IfModule>
 
-SecRule RESPONSE_STATUS "@streq 408" "phase:5,id:'981051',t:none,nolog,pass,setvar:ip.slow_dos_counter=+1,expirevar:ip.slow_dos_counter=60"
-SecRule IP:SLOW_DOS_COUNTER "@gt 5" "phase:1,id:'981052',t:none,log,drop,msg:'Client Connection Dropped due to high # of slow DoS alerts'"
+<%= @disabled.include?("981051") ? "#" : "" %>SecRule RESPONSE_STATUS "@streq 408" "phase:5,id:'981051',t:none,nolog,pass,setvar:ip.slow_dos_counter=+1,expirevar:ip.slow_dos_counter=60"
+<%= @disabled.include?("981052") ? "#" : "" %>SecRule IP:SLOW_DOS_COUNTER "@gt 5" "phase:1,id:'981052',t:none,log,drop,msg:'Client Connection Dropped due to high # of slow DoS alerts'"
 

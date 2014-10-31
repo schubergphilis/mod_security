@@ -19,9 +19,9 @@
 #
 # You must update the local path for the exec action to point to the lua script.
 #
-SecRule TX:ANOMALY_SCORE "@gt 0" "phase:5,t:none,pass,nolog,id:'900036',exec:/usr/local/apache/conf/crs/lua/gather_ip_data.lua"
-SecRule TX:HOSTNAME ".*" "phase:5,t:none,pass,log,id:'900037',msg:'Client Nslookup/WHOIS Abuse Info.',logdata:'Hostname: %{tx.hostname} and WHOIS Abuse Contact: %{tx.abuse_contact}',setvar:'ip.hostname=Hostname: %{tx.hostname} and WHOIS Abuse Contact: %{tx.abuse_contact}',expirevar:ip.hostname=86400,skip:1"
-SecRule TX:ANOMALY_SCORE "@gt 0" "phase:5,t:none,pass,log,id:'900038',msg:'Client Nslookup/WHOIS Abust Info.',logdata:'%{ip.hostname}'"
+<%= @disabled.include?("900036") ? "#" : "" %>SecRule TX:ANOMALY_SCORE "@gt 0" "phase:5,t:none,pass,nolog,id:'900036',exec:<%= @parameters['900036'] %>"
+<%= @disabled.include?("900037") ? "#" : "" %>SecRule TX:HOSTNAME ".*" "phase:5,t:none,pass,log,id:'900037',msg:'Client Nslookup/WHOIS Abuse Info.',logdata:'Hostname: %{tx.hostname} and WHOIS Abuse Contact: %{tx.abuse_contact}',setvar:'ip.hostname=Hostname: %{tx.hostname} and WHOIS Abuse Contact: %{tx.abuse_contact}',expirevar:ip.hostname=86400,skip:1"
+<%= @disabled.include?("900038") ? "#" : "" %>SecRule TX:ANOMALY_SCORE "@gt 0" "phase:5,t:none,pass,log,id:'900038',msg:'Client Nslookup/WHOIS Abust Info.',logdata:'%{ip.hostname}'"
 
 
 #
@@ -31,11 +31,11 @@ SecRule TX:ANOMALY_SCORE "@gt 0" "phase:5,t:none,pass,log,id:'900038',msg:'Clien
 # GeoLite Country - http://www.maxmind.com/app/geoip_country
 #
 # Define the proper path to the GeoIP DB
-SecGeoLookupDb /usr/local/apache/conf/modsec_current/base_rules/GeoLiteCity.dat
+<%= @disabled.include?("900039") ? "#" : "" %>SecGeoLookupDb <%= @parameters['900039'] %>
 
 #
 # Check the Transactional Anomaly Score - if it is not 0 then record the GeoIP data
 # for the client in the audit log.
 #
-SecRule TX:ANOMALY_SCORE "@gt 0" "chain,phase:5,pass,t:none,log,id:'900039',severity:'5',msg:'Logging GeoIP Data due to anomaly score.',logdata:'Country Code=%{geo.country_code}, Country Code3=%{geo.country_code3}, Country Name=%{geo.country_name}, Country Continent=%{geo.country_continent}, City=%{geo.city}'"
-	SecRule REMOTE_ADDR "@geoLookup"
+<%= @disabled.include?("900039") ? "#" : "" %>SecRule TX:ANOMALY_SCORE "@gt 0" "chain,phase:5,pass,t:none,log,id:'900039',severity:'5',msg:'Logging GeoIP Data due to anomaly score.',logdata:'Country Code=%{geo.country_code}, Country Code3=%{geo.country_code3}, Country Name=%{geo.country_name}, Country Continent=%{geo.country_continent}, City=%{geo.city}'"
+<%= @disabled.include?("900039") ? "#" : "" %>	SecRule REMOTE_ADDR "@geoLookup"

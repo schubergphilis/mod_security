@@ -51,7 +51,7 @@ SecAction "phase:1,id:'981082',t:none,nolog,pass,initcol:resource=%{request_head
 # 1. Uncomment the rules
 # 2. Create the modsecurity_40_appsensor_ignore.data file in the same directory
 #
-#SecRule REQUEST_FILENAME "@pmFromFile modsecurity_40_appsensor_ignore.data" "phase:2,id:'981083',t:none,nolog,pass,skipAfter:END_PROFILER_RULES"
-#SecRule REQUEST_FILENAME "@pmFromFile modsecurity_40_appsensor_ignore.data" "phase:5,id:'981084',t:none,nolog,pass,skipAfter:END_PROFILER_RULES"
+<%= @disabled.include?("981083") ? "#" : "" %>SecRule REQUEST_FILENAME "@pmFromFile modsecurity_40_appsensor_ignore.data" "phase:2,id:'981083',t:none,nolog,pass,skipAfter:END_PROFILER_RULES"
+<%= @disabled.include?("981084") ? "#" : "" %>SecRule REQUEST_FILENAME "@pmFromFile modsecurity_40_appsensor_ignore.data" "phase:5,id:'981084',t:none,nolog,pass,skipAfter:END_PROFILER_RULES"
 
 
