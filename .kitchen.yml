@@ -1,0 +1,54 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: ubuntu-12.04
+    run_list:
+    - recipe[apt::default]
+  - name: ubuntu-13.04
+    run_list:
+    - recipe[apt::default]
+  - name: debian-6.0.8
+    run_list:
+    - recipe[apt::default]
+  - name: debian-7.2.0
+    run_list:
+    - recipe[apt::default]
+  - name: centos-6.5
+  - name: fedora-20
+  - name: freebsd-9.2
+
+suites:
+  - name: default
+    run_list:
+      - recipe[mod_security::default]
+    attributes:
+    excludes:
+      - centos-6.5
+      - fedora-20
+      - freebsd-9.2
+  - name: rhel
+    run_list:
+      - recipe[mod_security::default]
+    attributes:
+    excludes:
+      - ubuntu-12.04
+      - ubuntu-13.04
+      - debian-6.0.8
+      - debian-7.2.0
+      - freebsd-9.2
+  - name: freebsd
+    run_list:
+      - recipe[mod_security::default]
+    attributes:
+    excludes:
+      - centos-6.5
+      - fedora-20
+      - ubuntu-12.04
+      - ubuntu-13.04
+      - debian-6.0.8
+      - debian-7.2.0
