@@ -33,6 +33,10 @@ default[:mod_security][:crs][:root_dir]        = "#{node[:mod_security][:dir]}/c
 default[:mod_security][:crs][:rules_root_dir]  = "#{node[:mod_security][:crs][:root_dir]}/rules"
 default[:mod_security][:crs][:activated_rules] = "#{node[:mod_security][:crs][:rules_root_dir]}/activated_rules"
 
+# custom rule set locations
+default[:mod_security][:custom][:root_dir]        = "#{node[:mod_security][:dir]}/rules"
+
+
 ##########
 # Base Configuration
 ##########
@@ -139,3 +143,22 @@ default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_45_char_ano
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_55_response_profiling] = false # LUA?
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_56_pvs_checks] = false
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_61_ip_forensics] = false # Unknown action? dependency
+
+
+##########
+# Custom Rule Set - RULES!
+##########
+
+default[:mod_security][:custom][:rules][:example] = [ 
+	"# This is an example custom rule file",
+	"# Chef managed file, manual updates will be lost"
+]
+
+##########
+# Custom Rule Set - DATA FILES!
+##########
+
+default[:mod_security][:custom][:datafiles][:example] = [ 
+	"# This is an example custom data file",
+	"# Chef managed file, manual updates will be lost"
+]
