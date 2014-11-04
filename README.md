@@ -92,8 +92,9 @@ mod_security.conf file
 License and Authors
 ===================
 
-Author:: Jason Rohwedder <jro@honeyapps.com>
-Author:: Frank Breedijk <fbreedijk@schubergphilis.com>
+Authors:: 
+* Jason Rohwedder <jro@honeyapps.com>
+* Frank Breedijk <fbreedijk@schubergphilis.com>
 
 Copyright:: 2011, HoneyApps, Inc
 
