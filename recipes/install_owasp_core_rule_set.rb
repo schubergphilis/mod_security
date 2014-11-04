@@ -45,7 +45,7 @@ else
     action :create
     source node[:mod_security][:crs][:dl_url]
     mode '0644'
-    checksum node[:mod_security][:crs][:checksum] # Not a checksum check for security. Will be unused with create_if_missing.
+    checksum node[:mod_security][:crs][:checksum][node[:mod_security][:crs][:version]] # Not a checksum check for security. Will be unused with create_if_missing.
     backup false
     not_if do
       # FIXME: Only checks for the existence of the .example file i.e. rules already in place. Doesn't check the version of the rules is as specified.
@@ -60,8 +60,8 @@ ruby_block 'validate_crs_tarball_checksum' do
   block do
     require 'digest'
     checksum = Digest::SHA256.file(crs_tar_file).hexdigest
-    if checksum != node[:mod_security][:crs][:checksum]
-      Chef::Log.fatal("Downloaded core rule set tarball checksum #{checksum} does not match known checksum #{node[:mod_security][:crs][:checksum]}")
+    if checksum != node[:mod_security][:crs][:checksum][node[:mod_security][:crs][:version]]
+      Chef::Log.fatal("Downloaded core rule set tarball checksum #{checksum} does not match known checksum #{node[:mod_security][:crs][:checksum][node[:mod_security][:crs][:version]]}")
       fail 'Downloaded core rule set tarball did not match known checksum'
     end
   end
