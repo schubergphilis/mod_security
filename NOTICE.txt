@@ -1,0 +1,6 @@
+This cookbook includes the following software:
+
+Core ModSecurity Rule Set
+Copyright (C) 2006-2012 Trustwave All rights reserved.
+Distributed under Apache Software License (ASL) version 2
+https://www.owasp.org/index.php/Category:OWASP_ModSecurity_Core_Rule_Set_Project
