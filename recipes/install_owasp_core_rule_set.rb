@@ -7,7 +7,28 @@ if node[:mod_security][:crs][:bundled]
     group "root"
     mode  "0755"
     action :create
+    notifies :restart, 'service[apache2]', :delayed
   end
+
+  # Customize rule files
+  node[:mod_security][:crs][:rules].each_pair do |rule_group, rules|
+    rule_dir = "#{node[:mod_security][:crs][:rules_root_dir]}/#{rule_group}_rules"
+    rules.each_pair do |rule, flag|
+      template "#{node[:mod_security][:crs][:rules_root_dir]}/#{rule_group}_rules/#{rule}.conf" do
+        source "#{node[:mod_security][:crs][:version]}/#{rule_group}_rules/#{rule}.conf.erb"
+	owner "root"
+	group "root"
+	mode  "0644"
+	action :create
+	variables(
+	  :disabled => node[:mod_security][:disabled_rules],
+	  :parameters => node[:mod_security][:rule_parameters][rule_group],
+	)
+	notifies :restart, 'service[apache2]', :delayed
+      end
+    end
+  end
+
 else
   # DOWNLOAD install
   package 'tar' do
@@ -24,7 +45,7 @@ else
     action :create
     source node[:mod_security][:crs][:dl_url]
     mode '0644'
-    checksum node[:mod_security][:crs][:checksum] # Not a checksum check for security. Will be unused with create_if_missing.
+    checksum node[:mod_security][:crs][:checksum][node[:mod_security][:crs][:version]] # Not a checksum check for security. Will be unused with create_if_missing.
     backup false
     not_if do
       # FIXME: Only checks for the existence of the .example file i.e. rules already in place. Doesn't check the version of the rules is as specified.
@@ -39,8 +60,8 @@ ruby_block 'validate_crs_tarball_checksum' do
   block do
     require 'digest'
     checksum = Digest::SHA256.file(crs_tar_file).hexdigest
-    if checksum != node[:mod_security][:crs][:checksum]
-      Chef::Log.fatal("Downloaded core rule set tarball checksum #{checksum} does not match known checksum #{node[:mod_security][:crs][:checksum]}")
+    if checksum != node[:mod_security][:crs][:checksum][node[:mod_security][:crs][:version]]
+      Chef::Log.fatal("Downloaded core rule set tarball checksum #{checksum} does not match known checksum #{node[:mod_security][:crs][:checksum][node[:mod_security][:crs][:version]]}")
       fail 'Downloaded core rule set tarball did not match known checksum'
     end
   end
@@ -57,6 +78,7 @@ end
 # - currently heavily tied to version of crs. be wary of updating one
 # - without the other
 template "#{node[:mod_security][:crs][:rules_root_dir]}/modsecurity_crs_10_setup.conf" do
+  source "#{node[:mod_security][:crs][:version]}/modsecurity_crs_10_setup.conf.erb"
   mode '0644'
   notifies :restart, 'service[apache2]', :delayed
 end
