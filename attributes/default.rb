@@ -30,19 +30,13 @@ default[:mod_security][:crs][:rules_root_dir]  = "#{node[:mod_security][:crs][:r
 default[:mod_security][:crs][:activated_rules] = "#{node[:mod_security][:crs][:rules_root_dir]}/activated_rules"
 
 # core rule set download config
-if ( not node[:mod_security][:crs][:bundled] )
-  default[:mod_security][:crs][:file_url]        = "#{node[:mod_security][:crs][:version]}.tar.gz"
-  default[:mod_security][:crs][:file_name]       = "owasp-modsecurity-crs-#{node[:mod_security][:crs][:file_url]}"
-  if node[:mod_security][:crs][:version] == "2.2.8"
-    default[:mod_security][:crs][:checksum]        = '183c6a912b142ca226c9401b281d5a763378efe993572e0a3e93b550161e404f'
-  elsif node[:mod_security][:crs][:version] == "2.2.9"
-    default[:mod_security][:crs][:checksum]        = '203669540abf864d40e892acf2ea02ec4ab47f9769747d28d79b6c2a501e3dfc'
-#  elsif node[:mod_security][:crs][:version] == "3.0.0"
-#    default[:mod_security][:crs][:checksum]        = '47172ab598ecff73129aa80e457863c70fa7f719d5e812d5db0416c4aab32349'
-  end
-  default[:mod_security][:crs][:dl_server]       = 'https://github.com/SpiderLabs/owasp-modsecurity-crs/archive/'
-  default[:mod_security][:crs][:dl_url]          = "#{node[:mod_security][:crs][:dl_server]}#{node[:mod_security][:crs][:file_url]}"
-end
+default[:mod_security][:crs][:file_url]        = "#{node[:mod_security][:crs][:version]}.tar.gz"
+default[:mod_security][:crs][:file_name]       = "owasp-modsecurity-crs-#{node[:mod_security][:crs][:file_url]}"
+default[:mod_security][:crs][:checksum]["2.2.8"] = '183c6a912b142ca226c9401b281d5a763378efe993572e0a3e93b550161e404f'
+default[:mod_security][:crs][:checksum]["2.2.9"] = '203669540abf864d40e892acf2ea02ec4ab47f9769747d28d79b6c2a501e3dfc'
+default[:mod_security][:crs][:checksum]["3.0.0"] = '47172ab598ecff73129aa80e457863c70fa7f719d5e812d5db0416c4aab32349'
+default[:mod_security][:crs][:dl_server]       = 'https://github.com/SpiderLabs/owasp-modsecurity-crs/archive/'
+default[:mod_security][:crs][:dl_url]          = "#{node[:mod_security][:crs][:dl_server]}#{node[:mod_security][:crs][:file_url]}"
 
 # custom rule set config
 default[:mod_security][:custom][:root_dir]        = "#{node[:mod_security][:dir]}/rules"
@@ -185,6 +179,8 @@ default[:mod_security][:rule_parameters][:optional]['981075'] = '^/(?:(admin|acc
 default[:mod_security][:rule_parameters][:optional]['950115'] = '/bin/runAV' # Example virus scanning command
 default[:mod_security][:rule_parameters][:experimental]['981050'] = '/usr/local/apache/conf/modsec/GeoLiteCity.dat' # Example GeoLookupDB
 default[:mod_security][:rule_parameters][:experimental]['981198'] = '/usr/local/apache/conf/modsec_current/base_rules/osvdb.lua' # OSVB integration lua script
+default[:mod_security][:rule_parameters][:experimental]['900030'] = '192.168.168.128' # Archni IP
+default[:mod_security][:rule_parameters][:experimental]['900031'] = '/etc/apache2/modsecurity-crs/lua/arachni_integration.lua' # Archni lua script
 default[:mod_security][:rule_parameters][:experimental]['900036'] = '/usr/local/apache/conf/crs/lua/gather_ip_data.lua' # IP data lua script
 default[:mod_security][:rule_parameters][:experimental]['900039'] = '/usr/local/apache/conf/modsec_current/base_rules/GeoLiteCity.dat' # Example GeoLookupDB
 default[:mod_security][:rule_parameters][:experimental]['SecReadStateLimit'] = 100 # SecReadStateLimit
