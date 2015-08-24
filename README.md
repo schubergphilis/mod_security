@@ -39,11 +39,12 @@ end
 
 ## Cookbooks
 
-This cookbook depends on apache2 and build-essential
+This cookbook depends on apache2 and build-essential or IIS for Windows
 
 ## Platforms
 
 ### Supported
+* Windows (tested on 2008R2 and 2012R2)
 * Ubuntu (tested on 12.04 and 13.04)
 * Debian (tested on 6.0.8 and 7.2.0)
 * RedHat (untested)
@@ -87,7 +88,7 @@ Installs mod_security for IIS (Windows)
 
 install_owasp_core_rule_set
 ---------------------------
-Install the bundled / chef template managed CRS
+Install the bundled / chef template managed OWASP CRS
 
 install_custom_rule_set
 -----------------------
