@@ -17,12 +17,25 @@
 # limitations under the License.
 #
 
-if platform_family?('windows')
-  include_recipe 'mod_security::install_base_iis'
-  include_recipe 'mod_security::config'
-else
+if not platform_family?('windows')
   include_recipe 'apache2'
-  include_recipe 'mod_security::install_base_apache'
+end
+
+if node[:mod_security][:install_base] then
+  if platform_family?('windows')
+    include_recipe 'mod_security::install_base_iis'
+  else
+    include_recipe 'mod_security::install_base_apache'
+  end
+end
+
+
+if node[:mod_security][:install_crs] then
+  include_recipe 'mod_security::install_owasp_core_rule_set'
+end
+
+if node[:mod_security][:install_custom] then
+  include_recipe 'mod_security::install_custom_rule_set'
 end
 
 ruby_block 'webreset' do
@@ -34,5 +47,3 @@ ruby_block 'webreset' do
   action :nothing
 end
 
-# include_recipe 'mod_security::install_owasp_core_rule_set'
-# include_recipe 'mod_security::install_custom_rule_set'

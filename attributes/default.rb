@@ -20,16 +20,21 @@ default['vcredist_x64']['package_name'] = 'Microsoft Visual C++ 2013 Redistribut
 default['vcredist_x64']['url']			= 'http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x64.exe'
 default['vcredist_x64']['checksum']		= 'e554425243e3e8ca1cd5fe550db41e6fa58a007c74fad400274b128452f38fb8'
 
+# define what default actions should be; install mod_security and manage rulesets
+default[:mod_security][:install_base] = true		# Install the mod_security code
+default[:mod_security][:install_crs] = true		# Install the OWASP core rule set
+default[:mod_security][:install_custom] = true		# Install custom rule files
+
 # mod_security locations
-# default[:mod_security][:from_source] = false
-# default[:mod_security][:source_version] = '2.7.7'
-# default[:mod_security][:source_file] = "modsecurity-apache_#{node[:mod_security][:source_version]}.tar.gz"
-# default[:mod_security][:source_checksum] = '11e05cfa6b363c2844c6412a40ff16f0021e302152b38870fd1f2f44b204379b'
-# default[:mod_security][:source_dl_server] = 'https://github.com/SpiderLabs/ModSecurity/releases/download'
-# default[:mod_security][:source_dl_url] = "#{node[:mod_security][:source_dl_server]}/v#{node[:mod_security][:source_version]}/#{node[:mod_security][:source_file]}"
-# default[:mod_security][:source_module_name] = 'mod_security2.so'
-# default[:mod_security][:source_module_path] = '/usr/local/modsecurity/lib' #FIXME: Pass to ./configure script
-# default[:mod_security][:source_module_identifier] = 'security2_module'
+default[:mod_security][:from_source] = false
+default[:mod_security][:source_version] = '2.2.7'
+default[:mod_security][:source_file] = "modsecurity-apache_#{node[:mod_security][:source_version]}.tar.gz"
+default[:mod_security][:source_checksum] = '11e05cfa6b363c2844c6412a40ff16f0021e302152b38870fd1f2f44b204379b'
+default[:mod_security][:source_dl_server] = 'https://github.com/SpiderLabs/ModSecurity/releases/download'
+default[:mod_security][:source_dl_url] = "#{node[:mod_security][:source_dl_server]}/v#{node[:mod_security][:source_version]}/#{node[:mod_security][:source_file]}"
+default[:mod_security][:source_module_name] = 'mod_security2.so'
+default[:mod_security][:source_module_path] = '/usr/local/modsecurity/lib' #FIXME: Pass to ./configure script
+default[:mod_security][:source_module_identifier] = 'security2_module'
 default[:mod_security][:rules] = "#{node[:mod_security][:dir]}/owasp_crs"
 
 # core rule set config
@@ -48,13 +53,13 @@ end
 default[:mod_security][:crs][:activated_rules] = "#{node[:mod_security][:crs][:rules_root_dir]}/activated_rules"
   
 # core rule set download config
-# default[:mod_security][:crs][:file_url] = "#{node[:mod_security][:crs][:version]}.tar.gz"
-# default[:mod_security][:crs][:file_name] = "owasp-modsecurity-crs-#{node[:mod_security][:crs][:file_url]}"
-# default[:mod_security][:crs][:checksum]["2.2.8"] = '183c6a912b142ca226c9401b281d5a763378efe993572e0a3e93b550161e404f'
-# default[:mod_security][:crs][:checksum]["2.2.9"] = '203669540abf864d40e892acf2ea02ec4ab47f9769747d28d79b6c2a501e3dfc'
-# default[:mod_security][:crs][:checksum]["3.0.0"] = '47172ab598ecff73129aa80e457863c70fa7f719d5e812d5db0416c4aab32349'
-# default[:mod_security][:crs][:dl_server] = 'https://github.com/SpiderLabs/owasp-modsecurity-crs/archive/'
-# default[:mod_security][:crs][:dl_url] = "#{node[:mod_security][:crs][:dl_server]}#{node[:mod_security][:crs][:file_url]}"
+default[:mod_security][:crs][:file_url] = "#{node[:mod_security][:crs][:version]}.tar.gz"
+default[:mod_security][:crs][:file_name] = "owasp-modsecurity-crs-#{node[:mod_security][:crs][:file_url]}"
+default[:mod_security][:crs][:checksum]["2.2.8"] = '183c6a912b142ca226c9401b281d5a763378efe993572e0a3e93b550161e404f'
+default[:mod_security][:crs][:checksum]["2.2.9"] = '203669540abf864d40e892acf2ea02ec4ab47f9769747d28d79b6c2a501e3dfc'
+default[:mod_security][:crs][:checksum]["3.0.0"] = '47172ab598ecff73129aa80e457863c70fa7f719d5e812d5db0416c4aab32349'
+default[:mod_security][:crs][:dl_server] = 'https://github.com/SpiderLabs/owasp-modsecurity-crs/archive/'
+default[:mod_security][:crs][:dl_url] = "#{node[:mod_security][:crs][:dl_server]}#{node[:mod_security][:crs][:file_url]}"
 
 # custom rule set config
 default[:mod_security][:custom][:root_dir] = "#{node[:mod_security][:dir]}/owasp_crs"
@@ -66,7 +71,7 @@ default[:mod_security][:base_config]                  = "#{node[:mod_security][:
 default[:mod_security][:rule_engine]                  = 'DetectionOnly'
 # "On" to actively block
 
-default[:mod_security][:request_body_access]          = 'Off'
+default[:mod_security][:request_body_access]          = 'On'
 # allow mod_security to access request bodies
 default[:mod_security][:request_body_limit]           = '13107200'
 default[:mod_security][:request_body_no_files_limit]  = '131072'
@@ -99,9 +104,11 @@ default[:mod_security][:audit_log_type]               = 'Serial'
 # FIXME: add support concurrent audit logging
 case node[:platform]
 when 'windows'
- default[:mod_security][:audit_log]                    = 'c:\\inetpub\\logs\\modsec\\modsec_audit.log'
+ default[:mod_security][:audit_dir]                    = 'c:\\inetpub\\logs\\modsec'
+ default[:mod_security][:audit_log]                    = "#{node[:mod_security][:audit_dir]}\\modsec_audit.log"
 else
- default[:mod_security][:audit_log]                    = '/var/log/modsec_audit.log'
+ default[:mod_security][:audit_dir]                    = '/var/log'
+ default[:mod_security][:audit_log]                    = "#{node[:mod_security][:audit_dir]}/modsec_audit.log"
 end
 
 
