@@ -77,11 +77,17 @@ default
 -------
 This installs base, the OWASP core rule set and your own custom rules currently.
 
-install_base
-------------
+install_base_apache
+-------------------
+Installs mod_security for Apache (!Windows)
+
+install_base_iis
+----------------
+Installs mod_security for IIS (Windows)
 
 install_owasp_core_rule_set
 ---------------------------
+Install the bundled / chef template managed CRS
 
 install_custom_rule_set
 -----------------------
@@ -94,6 +100,7 @@ License and Authors
 
 Author:: Jason Rohwedder <jro@honeyapps.com>
 Author:: Frank Breedijk <fbreedijk@schubergphilis.com>
+Author:: Matthijs Wijers <mwijers@schubergphilis.com>
 
 Copyright:: 2011, HoneyApps, Inc
 
