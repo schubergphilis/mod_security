@@ -38,14 +38,9 @@ if node[:mod_security][:install_custom] then
   include_recipe 'mod_security::install_custom_rule_set'
 end
 
-ruby_block 'webreset' do
-    if platform_family?('windows')
-      block {}
-      execute'iisreset'
-    else
-      block {}
-      notifies :action, 'service[apache2]', :restart
-    end
-    action :nothing
+if platform_family?('windows')
+  execute 'iisreset' do
+  action :nothing
+  end
 end
 

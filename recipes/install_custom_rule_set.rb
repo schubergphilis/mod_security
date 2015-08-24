@@ -5,7 +5,8 @@ node[:mod_security][:custom][:rules].each do |set, lines|
     owner  "root" unless platform? 'windows'
     group  "root" unless platform? 'windows'
     mode   00644 unless platform? 'windows'
-    notifies :run, "ruby_block[webreset]", :delayed
+    notifies :reload, 'service[apache2]', :delayed unless platform? 'windows'
+    notifies :run, 'execute[iisreset]', :delayed if platform? 'windows'
     variables(:lines => lines)
   end
 end
@@ -17,7 +18,8 @@ node[:mod_security][:custom][:datafiles].each do |set, lines|
     owner  "root" unless platform? 'windows'
     group  "root" unless platform? 'windows'
     mode   00644 unless platform? 'windows'
-    notifies :run, "ruby_block[webreset]", :delayed
+    notifies :reload, 'service[apache2]', :delayed unless platform? 'windows'
+    notifies :run, 'execute[iisreset]', :delayed if platform? 'windows'
     variables(:lines => lines)
   end
 end

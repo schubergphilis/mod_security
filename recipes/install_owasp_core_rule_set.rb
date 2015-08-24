@@ -12,7 +12,8 @@ if node[:mod_security][:crs][:bundled]
     group "root" unless platform? 'windows'
     mode  "0755" unless platform? 'windows'
     action :create
-    notifies :run, 'ruby_block[webreset]', :delayed
+    notifies :restart, 'service[apache2]', :delayed unless platform? 'windows'
+    notifies :run, 'execute[iisreset]', :delayed if platform? 'windows'
   end
 
   # Install customize rule files from the templates
@@ -29,7 +30,8 @@ if node[:mod_security][:crs][:bundled]
 	  :disabled => node[:mod_security][:disabled_rules],
 	  :parameters => node[:mod_security][:rule_parameters][rule_group],
 	)
-        notifies :run, 'ruby_block[webreset]', :delayed
+        notifies :restart, 'service[apache2]', :delayed unless platform? 'windows'
+        notifies :run, 'execute[iisreset]', :delayed if platform? 'windows'
       end
     end
   end
@@ -93,7 +95,8 @@ end
 template "#{node[:mod_security][:crs][:rules_root_dir]}/modsecurity_crs_10_setup.conf" do
   source "#{node[:mod_security][:crs][:version]}/modsecurity_crs_10_setup.conf.erb"
   mode '0644' unless platform? 'windows'
-  notifies :run, 'ruby_block[webreset]', :delayed
+  notifies :restart, 'service[apache2]', :delayed unless platform? 'windows'
+  notifies :run, 'execute[iisreset]', :delayed if platform? 'windows'
 end
 
 # Next up link the files of the rule groups we want to have turned on
@@ -104,7 +107,8 @@ node[:mod_security][:crs][:rules].each_pair do |rule_group, rules|
       link "#{node[:mod_security][:crs][:activated_rules]}/#{rule}.conf" do
       to "#{rule_dir}/#{rule}.conf"
       action (flag ? :create : :delete)
-      notifies :run, 'ruby_block[webreset]', :delayed
+      notifies :restart, 'service[apache2]', :delayed unless platform? 'windows'
+      notifies :run, 'execute[iisreset]', :delayed if platform? 'windows'
     end
 
     # deal with data_files
@@ -138,7 +142,8 @@ node[:mod_security][:crs][:rules].each_pair do |rule_group, rules|
         to "#{rule_dir}/#{data_filename}"
         action (flag ? :create : :delete)
         only_if { File.exists?("#{rule_dir}/#{data_filename}") }
-        notifies :run, 'ruby_block[webreset]', :delayed
+        notifies :restart, 'service[apache2]', :delayed unless platform? 'windows'
+        notifies :run, 'execute[iisreset]', :delayed if platform? 'windows'
       end
     end
 
