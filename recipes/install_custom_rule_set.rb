@@ -5,7 +5,7 @@ node[:mod_security][:custom][:rules].each do |set, lines|
     owner  "root"
     group  "root"
     mode   00644
-    notifies :reload, "service[apache2]", :delayed
+    notifies :run, "ruby_block[webreset]", :delayed
     variables(:lines => lines)
   end
 end
@@ -17,7 +17,7 @@ node[:mod_security][:custom][:datafiles].each do |set, lines|
     owner  "root"
     group  "root"
     mode   00644
-    notifies :reload, "service[apache2]", :delayed
+    notifies :run, "ruby_block[webreset]", :delayed
     variables(:lines => lines)
   end
 end

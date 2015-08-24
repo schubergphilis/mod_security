@@ -17,7 +17,22 @@
 # limitations under the License.
 #
 
-include_recipe 'apache2'
-include_recipe 'mod_security::install_base'
-include_recipe 'mod_security::install_owasp_core_rule_set'
-include_recipe 'mod_security::install_custom_rule_set'
+if platform_family?('windows')
+  include_recipe 'mod_security::install_base_iis'
+  include_recipe 'mod_security::config'
+else
+  include_recipe 'apache2'
+  include_recipe 'mod_security::install_base_apache'
+end
+
+ruby_block 'webreset' do
+  if platform_family?('windows')
+    execute 'iisreset'
+  else
+    notifies :action, 'service[apache2]', :restart
+  end
+  action :nothing
+end
+
+# include_recipe 'mod_security::install_owasp_core_rule_set'
+# include_recipe 'mod_security::install_custom_rule_set'
