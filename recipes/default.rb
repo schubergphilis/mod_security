@@ -39,11 +39,13 @@ if node[:mod_security][:install_custom] then
 end
 
 ruby_block 'webreset' do
-  if platform_family?('windows')
-    execute 'iisreset'
-  else
-    notifies :action, 'service[apache2]', :restart
-  end
-  action :nothing
+    if platform_family?('windows')
+      block {}
+      execute'iisreset'
+    else
+      block {}
+      notifies :action, 'service[apache2]', :restart
+    end
+    action :nothing
 end
 

@@ -7,10 +7,10 @@ if node[:mod_security][:crs][:bundled]
 
   # Make sure the directory exists to install into
   remote_directory "owasp-modsecurity-crs-#{node[:mod_security][:crs][:version]}" do
-    path  node[:mod_security][:crs][:rules_root_dir]
-    owner "root"
-    group "root"
-    mode  "0755"
+    path node[:mod_security][:crs][:rules_root_dir]
+    owner "root" unless platform? 'windows'
+    group "root" unless platform? 'windows'
+    mode  "0755" unless platform? 'windows'
     action :create
     notifies :run, 'ruby_block[webreset]', :delayed
   end
@@ -21,9 +21,9 @@ if node[:mod_security][:crs][:bundled]
     rules.each_pair do |rule, flag|
       template "#{node[:mod_security][:crs][:rules_root_dir]}/#{rule_group}_rules/#{rule}.conf" do
         source "#{node[:mod_security][:crs][:version]}/#{rule_group}_rules/#{rule}.conf.erb"
-	owner "root"
-	group "root"
-	mode  "0644"
+	owner "root" unless platform? 'windows'
+	group "root" unless platform? 'windows'
+	mode  "0644" unless platform? 'windows'
 	action :create
 	variables(
 	  :disabled => node[:mod_security][:disabled_rules],
@@ -54,7 +54,7 @@ else
     remote_file crs_tar_file do
       action :create
       source node[:mod_security][:crs][:dl_url]
-      mode '0644'
+      mode '0644' unless platform? 'windows'
       checksum node[:mod_security][:crs][:checksum][node[:mod_security][:crs][:version]] # Not a checksum check for security. Will be unused with create_if_missing.
       backup false
       not_if do
@@ -70,7 +70,7 @@ else
     block do
       require 'digest'
       checksum = Digest::SHA256.file(crs_tar_file).hexdigest
-      if checksum != node[:mod_security][:crs][:checksum][node[:mod_security][:crs][:version]]
+      if checksum != node[:mod_security][:crs][:checksum][node[:mod_security][:crs][:version]] then
         Chef::Log.fatal("Downloaded core rule set tarball checksum #{checksum} does not match known checksum #{node[:mod_security][:crs][:checksum][node[:mod_security][:crs][:version]]}")
         fail 'Downloaded core rule set tarball did not match known checksum'
       end
@@ -79,11 +79,10 @@ else
   end
 
   # untar core rule set if crs_tar_file is updated
-  case node[:platform_family]
-    execute 'untar_core_rule_set' do
+  execute 'untar_core_rule_set' do
     command "tar -xzf #{crs_tar_file} -C #{node[:mod_security][:crs][:rules_root_dir]} --strip 1"
     action :nothing
-   end
+  end
 end 
 
 # The setup.conf file is always installed from a template, even if a unbundled install is performed
@@ -93,7 +92,7 @@ end
 # - without the other
 template "#{node[:mod_security][:crs][:rules_root_dir]}/modsecurity_crs_10_setup.conf" do
   source "#{node[:mod_security][:crs][:version]}/modsecurity_crs_10_setup.conf.erb"
-  mode '0644'
+  mode '0644' unless platform? 'windows'
   notifies :run, 'ruby_block[webreset]', :delayed
 end
 
@@ -138,7 +137,7 @@ node[:mod_security][:crs][:rules].each_pair do |rule_group, rules|
       link "#{node[:mod_security][:crs][:activated_rules]}/#{data_filename}" do
         to "#{rule_dir}/#{data_filename}"
         action (flag ? :create : :delete)
-        only_if File.exists("#{rule_dir}/#{data_filename}")
+        only_if { File.exists?("#{rule_dir}/#{data_filename}") }
         notifies :run, 'ruby_block[webreset]', :delayed
       end
     end
