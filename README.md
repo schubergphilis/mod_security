@@ -76,7 +76,9 @@ Recipes
 
 default
 -------
-This installs base, the OWASP core rule set and your own custom rules currently.
+This installs base, the OWASP core rule set and your own custom rules, adjust
+mod_security.install_base,mod_security.install_crs and mod_security.install_custom
+to alter this behavior
 
 install_base_apache
 -------------------
@@ -103,7 +105,7 @@ Author:: Jason Rohwedder <jro@honeyapps.com>
 Author:: Frank Breedijk <fbreedijk@schubergphilis.com>
 Author:: Matthijs Wijers <mwijers@schubergphilis.com>
 
-Copyright:: 2011, HoneyApps, Inc
+Copyright:: 2015, HoneyApps, Inc
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
