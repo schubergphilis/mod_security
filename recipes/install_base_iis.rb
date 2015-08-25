@@ -17,3 +17,14 @@ end
 directory node[:mod_security][:audit_dir] do
   recursive true
 end
+
+template "#{node[:mod_security][:dir]}/modsecurity_iis.conf" do
+  source "modsecurity_iis.conf.erb"
+  notifies :run, 'execute[iisreset]', :delayed
+end
+
+template "#{node[:mod_security][:dir]}/modsecurity.conf" do
+  source "modsecurity.conf.erb"
+  notifies :run, 'execute[iisreset]', :delayed
+end
+
