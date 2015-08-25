@@ -104,7 +104,7 @@ default[:mod_security][:audit_log_type]               = 'Serial'
 # FIXME: add support concurrent audit logging
 case node[:platform]
 when 'windows'
- default[:mod_security][:audit_dir]                    = 'c:\\inetpub\\logs\\modsec'
+ default[:mod_security][:audit_dir]                    = 'c:\\logfiles\\modsecurity'
  default[:mod_security][:audit_log]                    = "#{node[:mod_security][:audit_dir]}\\modsec_audit.log"
 else
  default[:mod_security][:audit_dir]                    = '/var/log'
