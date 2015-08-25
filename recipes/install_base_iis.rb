@@ -28,3 +28,8 @@ template "#{node[:mod_security][:dir]}/modsecurity.conf" do
   notifies :run, 'execute[iisreset]', :delayed
 end
 
+# remove the default installed modsecurity_crs_10_setup.conf file
+file "#{node[:mod_security][:dir]}/modsecurity_crs_10_setup.conf" do
+  action :delete
+  only_if {File.exists?("#{node[:mod_security][:dir]}/modsecurity_crs_10_setup.conf")}
+end
