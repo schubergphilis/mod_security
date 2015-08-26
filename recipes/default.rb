@@ -22,13 +22,8 @@ if not platform_family?('windows')
 end
 
 if node[:mod_security][:install_base] then
-  if platform_family?('windows')
-    include_recipe 'mod_security::install_base_iis'
-  else
-    include_recipe 'mod_security::install_base_apache'
-  end
+  include_recipe 'mod_security::install_base'
 end
-
 
 if node[:mod_security][:install_crs] then
   include_recipe 'mod_security::install_owasp_core_rule_set'
