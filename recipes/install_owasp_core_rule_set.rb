@@ -19,6 +19,16 @@ if node[:mod_security][:crs][:bundled]
   # Install customize rule files from the templates
   node[:mod_security][:crs][:rules].each_pair do |rule_group, rules|
     rule_dir = "#{node[:mod_security][:crs][:rules_root_dir]}/#{rule_group}_rules"
+    
+    # Make sure directory exists
+    directory "#{rule_dir}" do
+      owner "root" unless platform? 'windows'
+      group "root" unless platform? 'windows'
+      mode  "0750" unless platform? 'windows'
+      action :create
+      recursive true
+    end
+
     rules.each_pair do |rule, flag|
       template "#{node[:mod_security][:crs][:rules_root_dir]}/#{rule_group}_rules/#{rule}.conf" do
         source "#{node[:mod_security][:crs][:version]}/#{rule_group}_rules/#{rule}.conf.erb"
