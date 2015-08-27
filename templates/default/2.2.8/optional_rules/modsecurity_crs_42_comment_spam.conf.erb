@@ -28,7 +28,7 @@ SecMarker END_RBL_LOOKUP
 SecMarker END_RBL_CHECK
 
 <%= @disabled.include?("958297") ? "#" : "" %>SecRule REQUEST_HEADERS:User-Agent "@pmFromFile modsecurity_42_comment_spam.data" \
-        "chain,phase:2,rev:'2.2.8',t:none,t:lowercase,pass,nolog,auditlog,status:404,msg:'Common SPAM/Email Harvester crawler',id:'958297',tag:'AUTOMATION/MALICIOUS',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.automation_score=+%{tx.warning_anomaly_score},setvar:tx.anomaly_score=+%{tx.warning_anomaly_score},setvar:'tx.%{rule.id}-AUTOMATION/MALICIOUS-%{matched_var_name}=%{matched_var}'"
+<%= @disabled.include?("958297") ? "#" : "" %>        "chain,phase:2,rev:'2.2.8',t:none,t:lowercase,pass,nolog,auditlog,status:404,msg:'Common SPAM/Email Harvester crawler',id:'958297',tag:'AUTOMATION/MALICIOUS',severity:'2',setvar:'tx.msg=%{rule.msg}',setvar:tx.automation_score=+%{tx.warning_anomaly_score},setvar:tx.anomaly_score=+%{tx.warning_anomaly_score},setvar:'tx.%{rule.id}-AUTOMATION/MALICIOUS-%{matched_var_name}=%{matched_var}'"
 <%= @disabled.include?("958297") ? "#" : "" %>	SecRule REQUEST_HEADERS:User-Agent "^(?:m(?:o(?:zilla\/4\.0\+?\(|vable type)|i(?:crosoft url|ssigua)|j12bot\/v1\.0\.8|sie)|e(?:mail(?:collector| ?siphon)|collector)|(?:blogsearchbot-marti|super happy fu)n|i(?:nternet explorer|sc systems irc)|ja(?:karta commons|va(?:\/| )1\.)|c(?:ore-project\/|herrypicker)|p(?:sycheclone|ussycat|ycurl)|(?:grub crawl|omniexplor)er|a(?:utoemailspider|dwords)|w(?:innie poh|ordpress)|nut(?:scrape/|chcvs)|8484 boston project|user(?:[- ]agent:)?|l(?:ibwww-perl|wp)|di(?:amond|gger)|trackback\/|httpproxy|<sc)"
 
 

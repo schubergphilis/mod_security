@@ -40,70 +40,70 @@ SecContentInjection On
 # This rule will use Content Injection to append the CSRF Token 
 #
 <%= @disabled.include?("981145") ? "#" : "" %>SecRule &SESSION:CSRF_TOKEN "@eq 1" "phase:4,id:'981145',t:none,nolog,pass,append:'<html><script language=\"JavaScript\"> \
-\
-var tokenName = \'CSRF_TOKEN\'; \
-var tokenValue = \'%{session.csrf_token}\'; \
-\
-function updateTags() { \
-\
-        var all = document.all ? document.all : document.getElementsByTagName(\'*\'); \
-        var len = all.length; \
-\
-        for(var i=0; i<len; i++) { \
-                var e = all[i]; \
-                \
-                updateTag(e, \'src\'); \
-                updateTag(e, \'href\'); \
-        } \
-} \
-\
-function updateForms() { \
-\
-        var forms = document.getElementsByTagName(\'form\'); \
-                \
-        for(i=0; i<forms.length; i++) { \
-                var html = forms[i].innerHTML; \
-                \
-                html += \'<input type=hidden name=\' + tokenName + \' value=\' + tokenValue + \' />\'; \
-\
-                forms[i].innerHTML = html; \
-        } \
-\
-} \
-\
-function updateTag(element, attr) { \
-\
-        var location = element.getAttribute(attr); \
-\
-        if(location != null && location != \'\' && isHttpLink(location)) { \
-\
-                var index = location.indexOf(\'?\'); \
-\
-                if(index != -1) { \
-                        location = location + \'&\' + tokenName + \'=\' + tokenValue; \
-                } else { \
-                        location = location + \'?\' + tokenName + \'=\' + tokenValue; \
-                } \
-\
-                element.setAttribute(attr, location); \
-\
-        } \
-\
-} \
-\
-function isHttpLink(src) { \
-        var result = 0; \
-                \
-        if(src.substring(0, 4) != \'http\' || src.substring(0, 1) == \'/\') { \
-                result = 1; \
-        } \
-        \
-        return result; \
-} \
-\
-updateTags(); \
-updateForms(); \
-\
-</script></html>'"
+<%= @disabled.include?("981145") ? "#" : "" %>\
+<%= @disabled.include?("981145") ? "#" : "" %>var tokenName = \'CSRF_TOKEN\'; \
+<%= @disabled.include?("981145") ? "#" : "" %>var tokenValue = \'%{session.csrf_token}\'; \
+<%= @disabled.include?("981145") ? "#" : "" %>\
+<%= @disabled.include?("981145") ? "#" : "" %>function updateTags() { \
+<%= @disabled.include?("981145") ? "#" : "" %>\
+<%= @disabled.include?("981145") ? "#" : "" %>        var all = document.all ? document.all : document.getElementsByTagName(\'*\'); \
+<%= @disabled.include?("981145") ? "#" : "" %>        var len = all.length; \
+<%= @disabled.include?("981145") ? "#" : "" %>\
+<%= @disabled.include?("981145") ? "#" : "" %>        for(var i=0; i<len; i++) { \
+<%= @disabled.include?("981145") ? "#" : "" %>                var e = all[i]; \
+<%= @disabled.include?("981145") ? "#" : "" %>                \
+<%= @disabled.include?("981145") ? "#" : "" %>                updateTag(e, \'src\'); \
+<%= @disabled.include?("981145") ? "#" : "" %>                updateTag(e, \'href\'); \
+<%= @disabled.include?("981145") ? "#" : "" %>        } \
+<%= @disabled.include?("981145") ? "#" : "" %>} \
+<%= @disabled.include?("981145") ? "#" : "" %>\
+<%= @disabled.include?("981145") ? "#" : "" %>function updateForms() { \
+<%= @disabled.include?("981145") ? "#" : "" %>\
+<%= @disabled.include?("981145") ? "#" : "" %>        var forms = document.getElementsByTagName(\'form\'); \
+<%= @disabled.include?("981145") ? "#" : "" %>                \
+<%= @disabled.include?("981145") ? "#" : "" %>        for(i=0; i<forms.length; i++) { \
+<%= @disabled.include?("981145") ? "#" : "" %>                var html = forms[i].innerHTML; \
+<%= @disabled.include?("981145") ? "#" : "" %>                \
+<%= @disabled.include?("981145") ? "#" : "" %>                html += \'<input type=hidden name=\' + tokenName + \' value=\' + tokenValue + \' />\'; \
+<%= @disabled.include?("981145") ? "#" : "" %>\
+<%= @disabled.include?("981145") ? "#" : "" %>                forms[i].innerHTML = html; \
+<%= @disabled.include?("981145") ? "#" : "" %>        } \
+<%= @disabled.include?("981145") ? "#" : "" %>\
+<%= @disabled.include?("981145") ? "#" : "" %>} \
+<%= @disabled.include?("981145") ? "#" : "" %>\
+<%= @disabled.include?("981145") ? "#" : "" %>function updateTag(element, attr) { \
+<%= @disabled.include?("981145") ? "#" : "" %>\
+<%= @disabled.include?("981145") ? "#" : "" %>        var location = element.getAttribute(attr); \
+<%= @disabled.include?("981145") ? "#" : "" %>\
+<%= @disabled.include?("981145") ? "#" : "" %>        if(location != null && location != \'\' && isHttpLink(location)) { \
+<%= @disabled.include?("981145") ? "#" : "" %>\
+<%= @disabled.include?("981145") ? "#" : "" %>                var index = location.indexOf(\'?\'); \
+<%= @disabled.include?("981145") ? "#" : "" %>\
+<%= @disabled.include?("981145") ? "#" : "" %>                if(index != -1) { \
+<%= @disabled.include?("981145") ? "#" : "" %>                        location = location + \'&\' + tokenName + \'=\' + tokenValue; \
+<%= @disabled.include?("981145") ? "#" : "" %>                } else { \
+<%= @disabled.include?("981145") ? "#" : "" %>                        location = location + \'?\' + tokenName + \'=\' + tokenValue; \
+<%= @disabled.include?("981145") ? "#" : "" %>                } \
+<%= @disabled.include?("981145") ? "#" : "" %>\
+<%= @disabled.include?("981145") ? "#" : "" %>                element.setAttribute(attr, location); \
+<%= @disabled.include?("981145") ? "#" : "" %>\
+<%= @disabled.include?("981145") ? "#" : "" %>        } \
+<%= @disabled.include?("981145") ? "#" : "" %>\
+<%= @disabled.include?("981145") ? "#" : "" %>} \
+<%= @disabled.include?("981145") ? "#" : "" %>\
+<%= @disabled.include?("981145") ? "#" : "" %>function isHttpLink(src) { \
+<%= @disabled.include?("981145") ? "#" : "" %>        var result = 0; \
+<%= @disabled.include?("981145") ? "#" : "" %>                \
+<%= @disabled.include?("981145") ? "#" : "" %>        if(src.substring(0, 4) != \'http\' || src.substring(0, 1) == \'/\') { \
+<%= @disabled.include?("981145") ? "#" : "" %>                result = 1; \
+<%= @disabled.include?("981145") ? "#" : "" %>        } \
+<%= @disabled.include?("981145") ? "#" : "" %>        \
+<%= @disabled.include?("981145") ? "#" : "" %>        return result; \
+<%= @disabled.include?("981145") ? "#" : "" %>} \
+<%= @disabled.include?("981145") ? "#" : "" %>\
+<%= @disabled.include?("981145") ? "#" : "" %>updateTags(); \
+<%= @disabled.include?("981145") ? "#" : "" %>updateForms(); \
+<%= @disabled.include?("981145") ? "#" : "" %>\
+<%= @disabled.include?("981145") ? "#" : "" %></script></html>'"
 
 </LocationMatch>
