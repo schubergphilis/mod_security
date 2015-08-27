@@ -38,7 +38,7 @@ if node[:mod_security][:crs][:bundled]
 	action :create
 	variables(
 	  :disabled => node[:mod_security][:disabled_rules],
-	  :parameters => node[:mod_security][:rule_parameters][rule_group],
+	  :parameters => node[:mod_security][:rule_parameters][rule_group]
 	)
         notifies :restart, 'service[apache2]', :delayed unless platform? 'windows'
         notifies :run, 'execute[iisreset]', :delayed if platform? 'windows'

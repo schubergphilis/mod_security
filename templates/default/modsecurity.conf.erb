@@ -106,22 +106,22 @@ SecRule TX:/^MSC_/ "!@streq 0" \
 # Do keep in mind that enabling this directive does increases both
 # memory consumption and response latency.
 #
-SecResponseBodyAccess <%= node[:mod_security][:request_body_access] %>
+SecResponseBodyAccess <%= node[:mod_security][:response_body_access] %>
 
 # Which response MIME types do you want to inspect? You should adjust the
 # configuration below to catch documents but avoid static files
 # (e.g., images and archives).
 #
-SecResponseBodyMimeType <%= node[:mod_security][:request_body_mime_type] %>
+SecResponseBodyMimeType <%= node[:mod_security][:response_body_mime_type] %>
 
 # Buffer response bodies of up to 512 KB in length.
-SecResponseBodyLimit <%= node[:mod_security][:request_body_limit] %>
+SecResponseBodyLimit <%= node[:mod_security][:response_body_limit] %>
 
 # What happens when we encounter a response body larger than the configured
 # limit? By default, we process what we have and let the rest through.
 # That's somewhat less secure, but does not break any legitimate pages.
 #
-SecResponseBodyLimitAction <%= node[:mod_security][:request_body_limit_action] %>
+SecResponseBodyLimitAction <%= node[:mod_security][:response_body_limit_action] %>
 
 
 # -- Filesystem configuration ------------------------------------------------

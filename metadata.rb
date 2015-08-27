@@ -10,7 +10,6 @@ depends 'apache2'
 depends 'build-essential'
 depends 'apt'
 depends 'yum'
-
 depends 'windows'
 
 %w{ redhat centos scientific fedora ubuntu debian windows}.each do |os|

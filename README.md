@@ -103,7 +103,9 @@ License and Authors
 
 Author:: Jason Rohwedder <jro@honeyapps.com>
 Author:: Frank Breedijk <fbreedijk@schubergphilis.com>
+Author:: Gavin Reynolds <g.reynolds@src.gla.ac.uk>
 Author:: Matthijs Wijers <mwijers@schubergphilis.com>
+Author:: Steven Geerts <sgeerts@schubergphilis.com>
 
 Copyright:: 2015, HoneyApps, Inc
 
