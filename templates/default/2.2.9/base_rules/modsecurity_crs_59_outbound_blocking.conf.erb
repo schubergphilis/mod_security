@@ -21,7 +21,7 @@
 # Alert and Block on High Anomaly Scores - this would block outbound data leakages
 #
 <%= @disabled.include?("981200") ? "#" : "" %>SecRule TX:OUTBOUND_ANOMALY_SCORE "@ge %{tx.outbound_anomaly_score_level}" \
-    "chain,phase:4,id:'981200',t:none,deny,msg:'Outbound Anomaly Score Exceeded (score %{TX.OUTBOUND_ANOMALY_SCORE}): Last Matched Message: %{tx.msg}',logdata:'Last Matched Data: %{matched_var}'"
+<%= @disabled.include?("981200") ? "#" : "" %>    "chain,phase:4,id:'981200',t:none,deny,msg:'Outbound Anomaly Score Exceeded (score %{TX.OUTBOUND_ANOMALY_SCORE}): Last Matched Message: %{tx.msg}',logdata:'Last Matched Data: %{matched_var}'"
 <%= @disabled.include?("981200") ? "#" : "" %>	SecRule TX:ANOMALY_SCORE_BLOCKING "@streq on" chain
 <%= @disabled.include?("981200") ? "#" : "" %>		SecRule TX:/^\d/ "(.*)"
 

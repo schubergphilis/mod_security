@@ -13,6 +13,6 @@
 
 # Initiate XML Processor in case of xml content-type
 <%= @disabled.include?("981053") ? "#" : "" %>SecRule REQUEST_HEADERS:Content-Type "text/xml" \
-"phase:1,id:'981053',t:none,t:lowercase,pass,nolog,ctl:requestBodyProcessor=XML"
+<%= @disabled.include?("981053") ? "#" : "" %>"phase:1,id:'981053',t:none,t:lowercase,pass,nolog,ctl:requestBodyProcessor=XML"
 
 
