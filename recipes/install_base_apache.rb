@@ -121,7 +121,7 @@ else
     package 'modsecurity-apache'
   end
 
-  libdir="#{node['apache']['libexec_dir']}"
+  libdir="#{node['apache']['libexecdir']}"
 
 end
 
