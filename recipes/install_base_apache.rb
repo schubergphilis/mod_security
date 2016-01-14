@@ -121,7 +121,9 @@ else
     package 'modsecurity-apache'
   end
 
-  libdir="#{node['apache']['libexecdir']}"
+  # Both node attributes are used in the wild. libexec_dir seems to be the newer convention
+  libdir="#{node['apache']['libexec_dir']}"
+  libdir="#{node['apache']['libexecdir']}" if libdir.nil? || libdir.empty?
 
 end
 
