@@ -117,6 +117,9 @@ else
     package 'mod_security'
   when 'debian'
     package 'libapache-mod-security'
+  when 'ubuntu'
+    package 'libapache-modsecurity'
+    package 'modsecurity-crs'
   when 'arch'
     package 'modsecurity-apache'
   end
