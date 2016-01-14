@@ -180,5 +180,5 @@ end
 
 # Restore SE linux context audit log
 execute "Restore SE Linux context audit log" do
-  command "semanage fcontext -a -t #{node[:mod_security][:audit_context]} '#{node[:mod_security][:audit_dir]}/#{node[:mod_security][:audit_log]}';restorecon -v '#{node[:mod_security][:audit_dir]}/#{node[:mod_security][:audit_log]}'"
+  command "chcon -t #{node[:mod_security][:audit_context]} '#{node[:mod_security][:audit_log]}'"
 end
