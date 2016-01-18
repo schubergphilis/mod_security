@@ -2,7 +2,7 @@
 case node[:platform_family]
 when 'rhel', 'fedora', 'suse'
   packages = %w[apr apr-util pcre-devel libxml2-devel curl-devel]
-when 'ubuntu', 'debian'
+when 'debian'
   packages = %w[libapr1 libaprutil1 libpcre3 libxml2 libcurl3]
 when 'arch'
   packages = %w[apr apr-util pcre libxml2 lib32-curl]
@@ -112,19 +112,19 @@ if node[:mod_security][:from_source]
 else
 
   # INSTALL FROM PACKAGE
-  case node[:platform_family]
-  when 'rhel', 'fedora', 'suse'
+  case node[:platform]
+  when 'redhat', 'centos', 'fedora', 'suse'
     package 'mod_security'
   when 'debian'
     package 'libapache-mod-security'
   when 'ubuntu'
-    package 'libapache-modsecurity'
+    package 'libapache2-modsecurity'
     package 'modsecurity-crs'
   when 'arch'
     package 'modsecurity-apache'
   end
 
-  libdir="#{node['apache']['libexecdir']}"
+  libdir="#{node['apache']['libexec_dir']}"
 
 end
 
