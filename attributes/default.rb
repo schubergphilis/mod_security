@@ -109,6 +109,7 @@ when 'windows'
 else
  default[:mod_security][:audit_dir]                    = '/var/log'
  default[:mod_security][:audit_log]                    = "#{node[:mod_security][:audit_dir]}/modsec_audit.log"
+ default[:mod_security][:audit_context]                = "httpd_log_t"
 end
 
 

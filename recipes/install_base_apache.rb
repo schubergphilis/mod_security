@@ -182,3 +182,8 @@ template 'modsecurity.conf' do
   backup false
   notifies :restart, 'service[apache2]'
 end
+
+# Restore SE linux context audit log
+execute "Restore SE Linux context audit log" do
+  command "chcon -t #{node[:mod_security][:audit_context]} '#{node[:mod_security][:audit_log]}'"
+end
