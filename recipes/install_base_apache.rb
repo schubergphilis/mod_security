@@ -124,7 +124,9 @@ else
     package 'modsecurity-apache'
   end
 
+  # Both node attributes are used in the wild. libexec_dir seems to be the newer convention
   libdir="#{node['apache']['libexec_dir']}"
+  libdir="#{node['apache']['libexecdir']}" if libdir.nil? || libdir.empty?
 
 end
 
@@ -179,4 +181,9 @@ template 'modsecurity.conf' do
   mode 0644
   backup false
   notifies :restart, 'service[apache2]'
+end
+
+# Restore SE linux context audit log
+execute "Restore SE Linux context audit log" do
+  command "chcon -t #{node[:mod_security][:audit_context]} '#{node[:mod_security][:audit_log]}'"
 end
