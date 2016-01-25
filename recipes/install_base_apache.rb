@@ -186,4 +186,5 @@ end
 # Restore SE linux context audit log
 execute "Restore SE Linux context audit log" do
   command "chcon -t #{node[:mod_security][:audit_context]} '#{node[:mod_security][:audit_log]}'"
+  only_if { File.exist?('/selinux/status') && File.exist?("#{node[:mod_security][:audit_log]}") }
 end
