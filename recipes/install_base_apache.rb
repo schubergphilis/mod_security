@@ -113,6 +113,8 @@ else
 
   # INSTALL FROM PACKAGE
   case node[:platform]
+  when 'amazon'
+    package 'mod24_security'
   when 'redhat', 'centos', 'fedora', 'suse'
     package 'mod_security'
   when 'debian'
