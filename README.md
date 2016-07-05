@@ -51,6 +51,7 @@ This cookbook depends on apache2 and build-essential or IIS for Windows
 * CentOS (tested on 6.5)
 * Fedora (untested)
 * FreeBSD (untested)
+* Amazon Linux (tested on 20160701)
 
 ### Coming Soon
 * Arch (anything else that apache2 supports)
@@ -107,7 +108,7 @@ Author:: Gavin Reynolds <g.reynolds@src.gla.ac.uk>
 Author:: Matthijs Wijers <mwijers@schubergphilis.com>
 Author:: Steven Geerts <sgeerts@schubergphilis.com>
 
-Copyright:: 2015, HoneyApps, Inc
+Copyright:: 2016, HoneyApps, Inc
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
