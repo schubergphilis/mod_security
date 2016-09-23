@@ -12,6 +12,6 @@ depends 'apt'
 depends 'yum'
 depends 'windows'
 
-%w{ redhat centos scientific fedora ubuntu debian windows}.each do |os|
+%w{ redhat centos scientific fedora ubuntu debian windows aws }.each do |os|
   supports os
 end
