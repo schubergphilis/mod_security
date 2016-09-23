@@ -16,8 +16,7 @@ There are 2 main use cases right now:
 * Adjust the attributes to your liking and install the default
   recipe.
 
-## Find out what ModSecurity could do for your site in less than
-   15-minutes.
+## Find out what ModSecurity could do for your site in less than 15-minutes.
 
 * Setup a base chef recipe for a server.
 * Set it to install the default recipe
