@@ -1,6 +1,16 @@
 chef-mod_security
 =================
 
+v0.2.6
+-------------------
+ * Fixed a bug that would break the apache server if the WOASP rules were not installed
+
+v0.2.5
+-------------------
+ * Support added for Windows
+ * Support Added for AWS
+ * Support added for Ubuntu
+
 v0.1.0
 -------------------
  * Updated to mod_security 2.7.7 and OWASP CRS 2.2.8
