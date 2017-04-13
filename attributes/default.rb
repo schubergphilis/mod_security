@@ -13,8 +13,8 @@ end
 default[:mod_security][:apache_mpm]  = 'prefork'
 
 default['mod_security']['package_name'] = 'ModSecurity IIS'
-default['mod_security']['url']          = 'https://www.modsecurity.org/tarball/2.9.0/ModSecurityIIS_2.9.0-64b.msi'
-default['mod_security']['checksum']     = 'cda1abf2c2e6f58b4dd33f4a16ab84c8b861663957dbdc2cf8ad7a4df1ad6645'
+default['mod_security']['url']          = 'https://www.modsecurity.org/tarball/2.9.1/ModSecurityIIS_2.9.1-64b.msi'
+default['mod_security']['checksum']     = '7ef38c203e97ef5708b06718e46f54239eaf04c27031d40efb39a57bcf2a92f1'
 
 default['vcredist_x64']['package_name'] = 'Microsoft Visual C++ 2013 Redistributable (x64) - 12.0.30501'
 default['vcredist_x64']['url']			= 'http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x64.exe'
