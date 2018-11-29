@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Cookbook Name:: mod_security
 # Definition:: mod_secure_proxy
@@ -18,7 +20,6 @@
 #
 
 define :mod_secure_proxy, enable: true do
-
   include_recipe 'apache2'
   include_recipe 'apache2::mod_ssl'
   include_recipe 'apache2::mod_proxy'
@@ -44,5 +45,4 @@ define :mod_secure_proxy, enable: true do
       EOH
     end
   end
-
 end

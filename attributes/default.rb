@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 # set root directory.
 case node[:platform_family]
@@ -10,20 +11,20 @@ else
 end
 
 # Apache MPM in use
-default[:mod_security][:apache_mpm]  = 'prefork'
+default[:mod_security][:apache_mpm] = 'prefork'
 
 default['mod_security']['package_name'] = 'ModSecurity IIS'
 default['mod_security']['url']          = 'https://www.modsecurity.org/tarball/2.9.1/ModSecurityIIS_2.9.1-64b.msi'
 default['mod_security']['checksum']     = '7ef38c203e97ef5708b06718e46f54239eaf04c27031d40efb39a57bcf2a92f1'
 
 default['vcredist_x64']['package_name'] = 'Microsoft Visual C++ 2013 Redistributable (x64) - 12.0.30501'
-default['vcredist_x64']['url']			= 'http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x64.exe'
-default['vcredist_x64']['checksum']		= 'e554425243e3e8ca1cd5fe550db41e6fa58a007c74fad400274b128452f38fb8'
+default['vcredist_x64']['url']	= 'http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x64.exe'
+default['vcredist_x64']['checksum']	= 'e554425243e3e8ca1cd5fe550db41e6fa58a007c74fad400274b128452f38fb8'
 
 # define what default actions should be; install mod_security and manage rulesets
-default[:mod_security][:install_base] = true		# Install the mod_security code
-default[:mod_security][:install_crs] = true		# Install the OWASP core rule set
-default[:mod_security][:install_custom] = true		# Install custom rule files
+default[:mod_security][:install_base] = true # Install the mod_security code
+default[:mod_security][:install_crs] = true # Install the OWASP core rule set
+default[:mod_security][:install_custom] = true # Install custom rule files
 
 # mod_security locations
 default[:mod_security][:from_source] = false
@@ -33,7 +34,7 @@ default[:mod_security][:source_checksum] = '11e05cfa6b363c2844c6412a40ff16f0021e
 default[:mod_security][:source_dl_server] = 'https://github.com/SpiderLabs/ModSecurity/releases/download'
 default[:mod_security][:source_dl_url] = "#{node[:mod_security][:source_dl_server]}/v#{node[:mod_security][:source_version]}/#{node[:mod_security][:source_file]}"
 default[:mod_security][:source_module_name] = 'mod_security2.so'
-default[:mod_security][:source_module_path] = '/usr/local/modsecurity/lib' #FIXME: Pass to ./configure script
+default[:mod_security][:source_module_path] = '/usr/local/modsecurity/lib' # FIXME: Pass to ./configure script
 default[:mod_security][:source_module_identifier] = 'security2_module'
 default[:mod_security][:rules] = "#{node[:mod_security][:dir]}/owasp_crs"
 
@@ -43,7 +44,7 @@ default[:mod_security][:crs][:version] = '2.2.9'	# Default to the latest version
 
 case node[:platform_family]
 when 'windows'
-  default[:mod_security][:crs][:root_dir] = "#{node[:mod_security][:dir]}"
+  default[:mod_security][:crs][:root_dir] = (node[:mod_security][:dir]).to_s
   default[:mod_security][:crs][:rules_root_dir] = "#{node[:mod_security][:crs][:root_dir]}/owasp_crs"
 else
   default[:mod_security][:crs][:root_dir] = "#{node[:mod_security][:dir]}/crs"
@@ -51,13 +52,13 @@ else
 end
 
 default[:mod_security][:crs][:activated_rules] = "#{node[:mod_security][:crs][:rules_root_dir]}/activated_rules"
-  
+
 # core rule set download config
 default[:mod_security][:crs][:file_url] = "#{node[:mod_security][:crs][:version]}.tar.gz"
 default[:mod_security][:crs][:file_name] = "owasp-modsecurity-crs-#{node[:mod_security][:crs][:file_url]}"
-default[:mod_security][:crs][:checksum]["2.2.8"] = '183c6a912b142ca226c9401b281d5a763378efe993572e0a3e93b550161e404f'
-default[:mod_security][:crs][:checksum]["2.2.9"] = '203669540abf864d40e892acf2ea02ec4ab47f9769747d28d79b6c2a501e3dfc'
-default[:mod_security][:crs][:checksum]["3.0.0"] = '47172ab598ecff73129aa80e457863c70fa7f719d5e812d5db0416c4aab32349'
+default[:mod_security][:crs][:checksum]['2.2.8'] = '183c6a912b142ca226c9401b281d5a763378efe993572e0a3e93b550161e404f'
+default[:mod_security][:crs][:checksum]['2.2.9'] = '203669540abf864d40e892acf2ea02ec4ab47f9769747d28d79b6c2a501e3dfc'
+default[:mod_security][:crs][:checksum]['3.0.0'] = '47172ab598ecff73129aa80e457863c70fa7f719d5e812d5db0416c4aab32349'
 default[:mod_security][:crs][:dl_server] = 'https://github.com/SpiderLabs/owasp-modsecurity-crs/archive/'
 default[:mod_security][:crs][:dl_url] = "#{node[:mod_security][:crs][:dl_server]}#{node[:mod_security][:crs][:file_url]}"
 
@@ -89,11 +90,11 @@ default[:mod_security][:response_body_limit_action]   = 'ProcessPartial'
 # best to set these to a more private directory for long term use
 case node[:platform]
 when 'windows'
- default[:mod_security][:tmp_dir]                      = 'C:\\Windows\\Temp'
- default[:mod_security][:data_dir]                     = 'C:\\Windows\\Temp' # Persistent data
+  default[:mod_security][:tmp_dir]                      = 'C:\\Windows\\Temp'
+  default[:mod_security][:data_dir]                     = 'C:\\Windows\\Temp' # Persistent data
 else
- default[:mod_security][:tmp_dir]                      = '/tmp/'
- default[:mod_security][:data_dir]                     = '/tmp/' # Persistent data
+  default[:mod_security][:tmp_dir]                      = '/tmp/'
+  default[:mod_security][:data_dir]                     = '/tmp/' # Persistent data
 end
 
 # audit log attributes
@@ -104,14 +105,13 @@ default[:mod_security][:audit_log_type]               = 'Serial'
 # FIXME: add support concurrent audit logging
 case node[:platform]
 when 'windows'
- default[:mod_security][:audit_dir]                    = 'c:\\logfiles\\modsecurity'
- default[:mod_security][:audit_log]                    = "#{node[:mod_security][:audit_dir]}\\modsec_audit.log"
+  default[:mod_security][:audit_dir]                    = 'c:\\logfiles\\modsecurity'
+  default[:mod_security][:audit_log]                    = "#{node[:mod_security][:audit_dir]}\\modsec_audit.log"
 else
- default[:mod_security][:audit_dir]                    = '/var/log'
- default[:mod_security][:audit_log]                    = "#{node[:mod_security][:audit_dir]}/modsec_audit.log"
- default[:mod_security][:audit_context]                = "httpd_log_t"
+  default[:mod_security][:audit_dir]                    = '/var/log'
+  default[:mod_security][:audit_log]                    = "#{node[:mod_security][:audit_dir]}/modsec_audit.log"
+  default[:mod_security][:audit_context]                = 'httpd_log_t'
 end
-
 
 # misc attributes
 # url-encoding seperator.
@@ -170,21 +170,21 @@ default[:mod_security][:crs][:rules][:optional][:modsecurity_crs_55_marketing] =
 # Experimental rules.  There be monstars here! Maybe.
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_11_brute_force] = false
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_11_dos_protection] = false
-default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_11_proxy_abuse] = false 
+default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_11_proxy_abuse] = false
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_11_slow_dos_protection] = false
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_16_scanner_integration] = false
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_25_cc_track_pan] = false
-default[:mod_security][:crs][:rules][:experimental]['modsecurity_crs_40_appsensor_detection_point_2.0_setup'] = false 
-default[:mod_security][:crs][:rules][:experimental]['modsecurity_crs_40_appsensor_detection_point_2.1_request_exception'] = false 
-default[:mod_security][:crs][:rules][:experimental]['modsecurity_crs_40_appsensor_detection_point_2.9_honeytrap'] = false 
-default[:mod_security][:crs][:rules][:experimental]['modsecurity_crs_40_appsensor_detection_point_3.0_end'] = false 
+default[:mod_security][:crs][:rules][:experimental]['modsecurity_crs_40_appsensor_detection_point_2.0_setup'] = false
+default[:mod_security][:crs][:rules][:experimental]['modsecurity_crs_40_appsensor_detection_point_2.1_request_exception'] = false
+default[:mod_security][:crs][:rules][:experimental]['modsecurity_crs_40_appsensor_detection_point_2.9_honeytrap'] = false
+default[:mod_security][:crs][:rules][:experimental]['modsecurity_crs_40_appsensor_detection_point_3.0_end'] = false
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_40_http_parameter_pollution] = false
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_42_csp_enforcement] = false
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_46_scanner_integration] = false
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_48_bayes_analysis] = false
-default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_55_response_profiling] = false 
+default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_55_response_profiling] = false
 default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_56_pvi_checks] = false
-default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_61_ip_forensics] = false 
+default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_61_ip_forensics] = false
 
 ###
 # Per rule settings
@@ -193,22 +193,22 @@ default[:mod_security][:crs][:rules][:experimental][:modsecurity_crs_61_ip_foren
 #
 ###
 
-default[:mod_security][:disabled_rules] = [ 
-	"960014", # base/modsecurity_crs_20_protocol_violations, rule is disabled by default
-	"960913", # base/modsecurity_crs_21_protocol_anomalies, rule is disabled by default
-	"950103_weaker", # base/modsecurity_crs_42_tight_security, rule is disabled by default
-	"981033", # optional/modsecurity_crs_11_avs_traffic, rule is disabled by default
-	"981034", # optional/modsecurity_crs_11_avs_traffic, rule is disabled by default
-	"981035", # optional/modsecurity_crs_11_avs_traffic, rule is disabled by default
-	"981075", # optional/modsecurity_crs_16_username_tracking, rule is disabled by default
-	"981076", # optional/modsecurity_crs_16_username_tracking, rule is disabled by default
-	"981077", # optional/modsecurity_crs_16_username_tracking, rule is disabled by default
-	"920013", # optional/modsecurity_crs_25_cc_known, rule is disabled by default
-	"920014", # optional/modsecurity_crs_25_cc_known, rule is disabled by default
-	"900030", # experimental/modsecurity_crs_16_scanner_integration, rule is disabled by default
-	"900031", # experimental/modsecurity_crs_16_scanner_integration, rule is disabled by default
-	"981083", # experimental/modsecurity_crs_40_appsensor_detection_point_2.0_setup.conf, rule is disabled by default
-	"981084", # experimental/modsecurity_crs_40_appsensor_detection_point_2.0_setup.conf, rule is disabled by default
+default[:mod_security][:disabled_rules] = [
+  '960014', # base/modsecurity_crs_20_protocol_violations, rule is disabled by default
+  '960913', # base/modsecurity_crs_21_protocol_anomalies, rule is disabled by default
+  '950103_weaker', # base/modsecurity_crs_42_tight_security, rule is disabled by default
+  '981033', # optional/modsecurity_crs_11_avs_traffic, rule is disabled by default
+  '981034', # optional/modsecurity_crs_11_avs_traffic, rule is disabled by default
+  '981035', # optional/modsecurity_crs_11_avs_traffic, rule is disabled by default
+  '981075', # optional/modsecurity_crs_16_username_tracking, rule is disabled by default
+  '981076', # optional/modsecurity_crs_16_username_tracking, rule is disabled by default
+  '981077', # optional/modsecurity_crs_16_username_tracking, rule is disabled by default
+  '920013', # optional/modsecurity_crs_25_cc_known, rule is disabled by default
+  '920014', # optional/modsecurity_crs_25_cc_known, rule is disabled by default
+  '900030', # experimental/modsecurity_crs_16_scanner_integration, rule is disabled by default
+  '900031', # experimental/modsecurity_crs_16_scanner_integration, rule is disabled by default
+  '981083', # experimental/modsecurity_crs_40_appsensor_detection_point_2.0_setup.conf, rule is disabled by default
+  '981084', # experimental/modsecurity_crs_40_appsensor_detection_point_2.0_setup.conf, rule is disabled by default
 ]
 default[:mod_security][:rule_parameters][:optional]['981033'] = '192.168.1.' # Example AVS
 default[:mod_security][:rule_parameters][:optional]['981034'] = '192.168.1.101' # Example AVS
@@ -231,16 +231,16 @@ default[:mod_security][:rule_parameters][:experimental]['981187'] = 'profile_pag
 # Custom Rule Set - RULES!
 ##########
 
-default[:mod_security][:custom][:rules][:example] = [ 
-	"# This is an example custom rule file",
-	"# Chef managed file, manual updates will be lost"
+default[:mod_security][:custom][:rules][:example] = [
+  '# This is an example custom rule file',
+  '# Chef managed file, manual updates will be lost'
 ]
 
 ##########
 # Custom Rule Set - DATA FILES!
 ##########
 
-default[:mod_security][:custom][:datafiles][:example] = [ 
-	"# This is an example custom data file",
-	"# Chef managed file, manual updates will be lost"
+default[:mod_security][:custom][:datafiles][:example] = [
+  '# This is an example custom data file',
+  '# Chef managed file, manual updates will be lost'
 ]

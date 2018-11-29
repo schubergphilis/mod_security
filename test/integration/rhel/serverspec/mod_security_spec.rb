@@ -1,9 +1,10 @@
+# frozen_string_literal: true
+
 require 'serverspec'
 
 set :backend, :exec
 
 describe 'Apache2 with mod_security' do
-
   it 'apache2 should be installed' do
     expect(package('httpd')).to be_installed
   end
@@ -34,5 +35,4 @@ describe 'Apache2 with mod_security' do
     expect(file('/etc/httpd/mod_security/modsecurity.conf')).to be_file
     expect(file('/etc/httpd/mod_security/modsecurity.conf')).to contain 'SecRuleEngine DetectionOnly'
   end
-
 end

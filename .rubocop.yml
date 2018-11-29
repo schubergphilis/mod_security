@@ -1,0 +1,13 @@
+---
+LineLength:
+  Max: 200
+Style/AsciiComments:
+  Enabled: false
+Metrics/BlockLength:
+  Max: 60
+Naming/HeredocDelimiterNaming:
+  Enabled: false
+Lint/EmptyWhen:
+  Enabled: false
+Style/CommentedKeyword:
+  Enabled: false

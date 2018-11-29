@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
-# -*- coding: utf-8 -*-
+# frozen_string_literal: true
+
 #
 # Copyright © 2012 Diego Elio Pettenò <flameeyes@flameeyes.eu>
 #
@@ -26,8 +27,8 @@ res = 0
 range = Range.new(*File.read('id-range').rstrip.split('-').map(&:to_i))
 
 # open all the rule files
-Dir.chdir("../../")
-Dir["**/*.conf"].each do |rulefile|
+Dir.chdir('../../')
+Dir['**/*.conf'].each do |rulefile|
   # read the content
   content = File.read(rulefile)
 
@@ -43,9 +44,9 @@ Dir["**/*.conf"].each do |rulefile|
     line = (prevline + line) unless prevline.nil?
 
     # remove comments
-    line.gsub!(/^([^'"]|'[^']+'|"[^"]+")#.*/) { $1 }
+    line.gsub!(/^([^'"]|'[^']+'|"[^"]+")#.*/) { Regexp.last_match(1) }
 
-    if line =~ /\\\n$/
+    if /\\\n$/.match?(line)
       prevline = line.gsub(/\\\n/, '')
       next
     else
@@ -62,31 +63,29 @@ Dir["**/*.conf"].each do |rulefile|
     directive = line.scan(/([^'"\s][^\s]*[^'"\s]|'(?:[^']|\\')*[^\\]'|"(?:[^"]|\\")*[^\\]")(?:\s+|$)/).flatten
     directive.map! do |piece|
       # then make sure to split the quoting out of the quoted strings
-      (piece[0] == '"' || piece[0] == "'") ? piece[1..-2] : piece
+      piece[0] == '"' || piece[0] == "'" ? piece[1..-2] : piece
     end
 
     # skip if it's not a SecRule or SecAction
     case directive[0]
-    when "SecRule"
+    when 'SecRule'
       rawrule = directive[3]
-    when "SecAction"
+    when 'SecAction'
       rawrule = directive[1]
     else
       next
     end
 
     # get the rule and split in its components
-    rule = (rawrule || "").gsub(/(?:^"|"$)/, '').split(/\s*,\s*/)
+    rule = (rawrule || '').gsub(/(?:^"|"$)/, '').split(/\s*,\s*/)
 
-    if rule.include?("chain")
-      next_chained = true
-    end
+    next_chained = true if rule.include?('chain')
 
     ids = rule.find_all { |piece| piece =~ /^id:/ }
     if ids.size > 1
-      $stderr.puts "#{rulefile}:#{lineno} rule with multiple ids"
+      warn "#{rulefile}:#{lineno} rule with multiple ids"
       next
-    elsif ids.size == 0
+    elsif ids.empty?
       id = nil
     else
       id = ids[0].sub(/^id:/, '').gsub(/(?:^'|'$)/, '').to_i
@@ -94,19 +93,19 @@ Dir["**/*.conf"].each do |rulefile|
 
     if this_chained
       unless id.nil?
-        $stderr.puts "#{rulefile}:#{lineno} chained rule with id"
+        warn "#{rulefile}:#{lineno} chained rule with id"
         res = 1
       end
       next
     elsif id.nil?
-      $stderr.puts "#{rulefile}:#{lineno} rule missing id (#{rule.join(',')})"
+      warn "#{rulefile}:#{lineno} rule missing id (#{rule.join(',')})"
       res = 1
       next
-    elsif ! range.include?(id)
-      $stderr.puts "#{rulefile}:#{lineno} rule with id #{id} outside of reserved range #{range}"
+    elsif !range.include?(id)
+      warn "#{rulefile}:#{lineno} rule with id #{id} outside of reserved range #{range}"
       res = 1
     elsif seen_ids.include?(id)
-      $stderr.puts "#{rulefile}:#{lineno} rule with duplicated id #{id}"
+      warn "#{rulefile}:#{lineno} rule with duplicated id #{id}"
       res = 1
     end
 

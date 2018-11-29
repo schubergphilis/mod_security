@@ -1,9 +1,10 @@
+# frozen_string_literal: true
+
 require 'serverspec'
 
 set :backend, :exec
 
 describe 'Apache2 with mod_security' do
-
   it 'apache2 should be installed' do
     expect(package('apache2')).to be_installed
   end
@@ -21,7 +22,7 @@ describe 'Apache2 with mod_security' do
     expect(file('/etc/apache2/mods-enabled/mod-security.conf')).to contain 'Include "/etc/apache2/mod_security/*.conf"'
   end
 
-  if (os[:family] == 'ubuntu') || (os[:family] == 'debian') then
+  if (os[:family] == 'ubuntu') || (os[:family] == 'debian')
     it 'apache2 should have a mod_security load file' do
       expect(file('/etc/apache2/mods-enabled/mod-security.load')).to be_file
       expect(file('/etc/apache2/mods-enabled/mod-security.load')).to contain 'LoadModule security2_module /usr/lib/apache2/modules/mod_security2.so'
@@ -43,5 +44,4 @@ describe 'Apache2 with mod_security' do
     expect(file('/etc/apache2/mod_security/modsecurity.conf')).to be_file
     expect(file('/etc/apache2/mod_security/modsecurity.conf')).to contain 'SecRuleEngine DetectionOnly'
   end
-
 end
