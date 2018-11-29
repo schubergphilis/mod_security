@@ -9,6 +9,7 @@ if node['mod_security']['crs']['bundled']
   # Make sure the directory exists to install into
   remote_directory "owasp-modsecurity-crs-#{node['mod_security']['crs']['version']}" do
     path node['mod_security']['crs']['rules_root_dir']
+    source "owasp-modsecurity-crs-#{node['mod_security']['crs']['version']}" 
     owner 'root' unless platform? 'windows'
     group 'root' unless platform? 'windows'
     mode  '0755' unless platform? 'windows'
