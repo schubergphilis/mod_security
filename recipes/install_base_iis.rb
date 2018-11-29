@@ -16,28 +16,28 @@ windows_package node['mod_security']['package_name'] do
   action :install
 end
 
-directory node[:mod_security][:audit_dir] do
+directory node['mod_security']['audit_dir'] do
   recursive true
 end
 
-template "#{node[:mod_security][:dir]}/modsecurity_iis.conf" do
+template "#{node['mod_security']['dir']}/modsecurity_iis.conf" do
   source 'modsecurity_iis.conf.erb'
   notifies :run, 'execute[iisreset]', :delayed
 end
 
-template "#{node[:mod_security][:dir]}/modsecurity.conf" do
+template "#{node['mod_security']['dir']}/modsecurity.conf" do
   source 'modsecurity.conf.erb'
   notifies :run, 'execute[iisreset]', :delayed
 end
 
 # remove the default installed modsecurity_crs_10_setup.conf file
-file "#{node[:mod_security][:dir]}/modsecurity_crs_10_setup.conf" do
+file "#{node['mod_security']['dir']}/modsecurity_crs_10_setup.conf" do
   action :delete
-  only_if { File.exist?("#{node[:mod_security][:dir]}/modsecurity_crs_10_setup.conf") }
+  only_if { File.exist?("#{node['mod_security']['dir']}/modsecurity_crs_10_setup.conf") }
 end
 
 cookbook_file 'unicode.mapping' do
-  path "#{node[:mod_security][:dir]}/unicode.mapping"
+  path "#{node['mod_security']['dir']}/unicode.mapping"
   action :create
   notifies :run, 'execute[iisreset]', :delayed
 end

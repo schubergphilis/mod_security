@@ -3,12 +3,12 @@
 # First part, installing CRS
 
 # Do we need to do a bundled or download install?
-if node[:mod_security][:crs][:bundled]
+if node['mod_security']['crs']['bundled']
   # Bundled install, using the templates in this cookbook
 
   # Make sure the directory exists to install into
-  remote_directory "owasp-modsecurity-crs-#{node[:mod_security][:crs][:version]}" do
-    path node[:mod_security][:crs][:rules_root_dir]
+  remote_directory "owasp-modsecurity-crs-#{node['mod_security']['crs']['version']}" do
+    path node['mod_security']['crs']['rules_root_dir']
     owner 'root' unless platform? 'windows'
     group 'root' unless platform? 'windows'
     mode  '0755' unless platform? 'windows'
@@ -18,8 +18,8 @@ if node[:mod_security][:crs][:bundled]
   end
 
   # Install customize rule files from the templates
-  node[:mod_security][:crs][:rules].each_pair do |rule_group, rules|
-    rule_dir = "#{node[:mod_security][:crs][:rules_root_dir]}/#{rule_group}_rules"
+  node['mod_security']['crs']['rules'].each_pair do |rule_group, rules|
+    rule_dir = "#{node['mod_security']['crs']['rules_root_dir']}/#{rule_group}_rules"
 
     # Make sure directory exists
     directory rule_dir.to_s do
@@ -31,15 +31,15 @@ if node[:mod_security][:crs][:bundled]
     end
 
     rules.each_pair do |rule, _flag|
-      template "#{node[:mod_security][:crs][:rules_root_dir]}/#{rule_group}_rules/#{rule}.conf" do
-        source "#{node[:mod_security][:crs][:version]}/#{rule_group}_rules/#{rule}.conf.erb"
+      template "#{node['mod_security']['crs']['rules_root_dir']}/#{rule_group}_rules/#{rule}.conf" do
+        source "#{node['mod_security']['crs']['version']}/#{rule_group}_rules/#{rule}.conf.erb"
         owner 'root' unless platform? 'windows'
         group 'root' unless platform? 'windows'
         mode  '0644' unless platform? 'windows'
         action :create
         variables(
-          disabled: node[:mod_security][:disabled_rules],
-          parameters: node[:mod_security][:rule_parameters][rule_group]
+          disabled: node['mod_security']['disabled_rules'],
+          parameters: node['mod_security']['rule_parameters'][rule_group]
         )
         notifies :restart, 'service[apache2]', :delayed unless platform? 'windows'
         notifies :run, 'execute[iisreset]', :delayed if platform? 'windows'
@@ -50,7 +50,7 @@ if node[:mod_security][:crs][:bundled]
 else
   # DOWNLOAD install
 
-  case node[:platform_family]
+  case node['platform_family']
   when 'windows'
     # No action required, the OWASP CRS is included in the MSI by default
   else
@@ -58,21 +58,21 @@ else
       action :install
     end
 
-    directory node[:mod_security][:crs][:rules_root_dir] do
+    directory node['mod_security']['crs']['rules_root_dir'] do
       recursive true
     end
 
     # download and install Core Rule Set
-    crs_tar_file = "#{Chef::Config[:file_cache_path]}/#{node[:mod_security][:crs][:file_name]}"
+    crs_tar_file = "#{Chef::Config['file_cache_path']}/#{node['mod_security']['crs']['file_name']}"
     remote_file crs_tar_file do
       action :create
-      source node[:mod_security][:crs][:dl_url]
+      source node['mod_security']['crs']['dl_url']
       mode '0644' unless platform? 'windows'
-      checksum node[:mod_security][:crs][:checksum][node[:mod_security][:crs][:version]] # Not a checksum check for security. Will be unused with create_if_missing.
+      checksum node['mod_security']['crs']['checksum'][node['mod_security']['crs']['version']] # Not a checksum check for security. Will be unused with create_if_missing.
       backup false
       not_if do
         # FIXME: Only checks for the existence of the .example file i.e. rules already in place. Doesn't check the version of the rules is as specified.
-        File.exist?("#{node[:mod_security][:crs][:root_dir]}/modsecurity_crs_10_setup.conf.example")
+        File.exist?("#{node['mod_security']['crs']['root_dir']}/modsecurity_crs_10_setup.conf.example")
       end
       notifies :create, 'ruby_block[validate_crs_tarball_checksum]', :immediately
     end
@@ -83,8 +83,8 @@ else
     block do
       require 'digest'
       checksum = Digest::SHA256.file(crs_tar_file).hexdigest
-      if checksum != node[:mod_security][:crs][:checksum][node[:mod_security][:crs][:version]]
-        Chef::Log.fatal("Downloaded core rule set tarball checksum #{checksum} does not match known checksum #{node[:mod_security][:crs][:checksum][node[:mod_security][:crs][:version]]}")
+      if checksum != node['mod_security']['crs']['checksum'][node['mod_security']['crs']['version']]
+        Chef::Log.fatal("Downloaded core rule set tarball checksum #{checksum} does not match known checksum #{node['mod_security']['crs']['checksum'][node['mod_security']['crs']['version']]}")
         raise 'Downloaded core rule set tarball did not match known checksum'
       end
     end
@@ -93,7 +93,7 @@ else
 
   # untar core rule set if crs_tar_file is updated
   execute 'untar_core_rule_set' do
-    command "tar -xzf #{crs_tar_file} -C #{node[:mod_security][:crs][:rules_root_dir]} --strip 1"
+    command "tar -xzf #{crs_tar_file} -C #{node['mod_security']['crs']['rules_root_dir']} --strip 1"
     action :nothing
   end
 end
@@ -103,8 +103,8 @@ end
 # install settings config
 # - currently heavily tied to version of crs. be wary of updating one
 # - without the other
-template "#{node[:mod_security][:crs][:rules_root_dir]}/modsecurity_crs_10_setup.conf" do
-  source "#{node[:mod_security][:crs][:version]}/modsecurity_crs_10_setup.conf.erb"
+template "#{node['mod_security']['crs']['rules_root_dir']}/modsecurity_crs_10_setup.conf" do
+  source "#{node['mod_security']['crs']['version']}/modsecurity_crs_10_setup.conf.erb"
   mode '0644' unless platform? 'windows'
   notifies :restart, 'service[apache2]', :delayed unless platform? 'windows'
   notifies :run, 'execute[iisreset]', :delayed if platform? 'windows'
@@ -112,10 +112,10 @@ end
 
 # Next up link the files of the rule groups we want to have turned on
 
-node[:mod_security][:crs][:rules].each_pair do |rule_group, rules|
-  rule_dir = "#{node[:mod_security][:crs][:rules_root_dir]}/#{rule_group}_rules"
+node['mod_security']['crs']['rules'].each_pair do |rule_group, rules|
+  rule_dir = "#{node['mod_security']['crs']['rules_root_dir']}/#{rule_group}_rules"
   rules.each_pair do |rule, flag|
-    link "#{node[:mod_security][:crs][:activated_rules]}/#{rule}.conf" do
+    link "#{node['mod_security']['crs']['activated_rules']}/#{rule}.conf" do
       to "#{rule_dir}/#{rule}.conf"
       action flag ? :create : :delete
       notifies :restart, 'service[apache2]', :delayed unless platform? 'windows'
@@ -149,7 +149,7 @@ node[:mod_security][:crs][:rules].each_pair do |rule_group, rules|
                      end
 
     data_filenames.each do |data_filename|
-      link "#{node[:mod_security][:crs][:activated_rules]}/#{data_filename}" do
+      link "#{node['mod_security']['crs']['activated_rules']}/#{data_filename}" do
         to "#{rule_dir}/#{data_filename}"
         action flag ? :create : :delete
         only_if { File.exist?("#{rule_dir}/#{data_filename}") }

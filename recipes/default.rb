@@ -21,11 +21,11 @@
 
 include_recipe 'apache2' unless platform_family?('windows')
 
-include_recipe 'mod_security::install_base' if node[:mod_security][:install_base]
+include_recipe 'mod_security::install_base' if node['mod_security']['install_base']
 
-include_recipe 'mod_security::install_owasp_core_rule_set' if node[:mod_security][:install_crs]
+include_recipe 'mod_security::install_owasp_core_rule_set' if node['mod_security']['install_crs']
 
-include_recipe 'mod_security::install_custom_rule_set' if node[:mod_security][:install_custom]
+include_recipe 'mod_security::install_custom_rule_set' if node['mod_security']['install_custom']
 
 if platform_family?('windows')
   execute 'iisreset' do
