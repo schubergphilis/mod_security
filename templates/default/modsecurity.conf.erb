@@ -7,7 +7,7 @@
 # only to start with, because that minimises the chances of post-installation
 # disruption.
 #
-SecRuleEngine <%= node[:mod_security][:rule_engine] %>
+SecRuleEngine <%= node['mod_security']['rule_engine'] %>
 
 
 # -- Request body handling ---------------------------------------------------
@@ -16,7 +16,7 @@ SecRuleEngine <%= node[:mod_security][:rule_engine] %>
 # won't be able to see any POST parameters, which opens a large security
 # hole for attackers to exploit.
 #
-SecRequestBodyAccess <%= node[:mod_security][:request_body_access] %>
+SecRequestBodyAccess <%= node['mod_security']['request_body_access'] %>
 
 
 # Enable XML request body parser.
@@ -32,21 +32,21 @@ SecRule REQUEST_HEADERS:Content-Type "text/xml" \
 # to the size of data, with files excluded. You want to keep that value as
 # low as practical.
 #
-SecRequestBodyLimit <%= node[:mod_security][:request_body_limit] %>
-SecRequestBodyNoFilesLimit <%= node[:mod_security][:request_body_no_files_limit] %>
+SecRequestBodyLimit <%= node['mod_security']['request_body_limit'] %>
+SecRequestBodyNoFilesLimit <%= node['mod_security']['request_body_no_files_limit'] %>
 
 # Store up to 128 KB of request body data in memory. When the multipart
 # parser reachers this limit, it will start using your hard disk for
 # storage. That is slow, but unavoidable.
 #
-SecRequestBodyInMemoryLimit <%= node[:mod_security][:request_body_in_memory_limit] %>
+SecRequestBodyInMemoryLimit <%= node['mod_security']['request_body_in_memory_limit'] %>
 
 # What do do if the request body size is above our configured limit.
 # Keep in mind that this setting will automatically be set to ProcessPartial
 # when SecRuleEngine is set to DetectionOnly mode in order to minimize
 # disruptions when initially deploying ModSecurity.
 #
-SecRequestBodyLimitAction <%= node[:mod_security][:request_body_limit_action] %>
+SecRequestBodyLimitAction <%= node['mod_security']['request_body_limit_action'] %>
 
 # Verify that we've correctly processed the request body.
 # As a rule of thumb, when failing to process a request body
@@ -85,8 +85,8 @@ SecRule MULTIPART_UNMATCHED_BOUNDARY "!@eq 0" \
 # PCRE Tuning
 # We want to avoid a potential RegEx DoS condition
 #
-SecPcreMatchLimit <%= node[:mod_security][:pcre_match_limit] %>
-SecPcreMatchLimitRecursion <%= node[:mod_security][:pcre_match_limit_recursion] %>
+SecPcreMatchLimit <%= node['mod_security']['pcre_match_limit'] %>
+SecPcreMatchLimitRecursion <%= node['mod_security']['pcre_match_limit_recursion'] %>
 
 # Some internal errors will set flags in TX and we will need to look for these.
 # All of these are prefixed with "MSC_".  The following flags currently exist:
@@ -106,22 +106,22 @@ SecRule TX:/^MSC_/ "!@streq 0" \
 # Do keep in mind that enabling this directive does increases both
 # memory consumption and response latency.
 #
-SecResponseBodyAccess <%= node[:mod_security][:response_body_access] %>
+SecResponseBodyAccess <%= node['mod_security']['response_body_access'] %>
 
 # Which response MIME types do you want to inspect? You should adjust the
 # configuration below to catch documents but avoid static files
 # (e.g., images and archives).
 #
-SecResponseBodyMimeType <%= node[:mod_security][:response_body_mime_type] %>
+SecResponseBodyMimeType <%= node['mod_security']['response_body_mime_type'] %>
 
 # Buffer response bodies of up to 512 KB in length.
-SecResponseBodyLimit <%= node[:mod_security][:response_body_limit] %>
+SecResponseBodyLimit <%= node['mod_security']['response_body_limit'] %>
 
 # What happens when we encounter a response body larger than the configured
 # limit? By default, we process what we have and let the rest through.
 # That's somewhat less secure, but does not break any legitimate pages.
 #
-SecResponseBodyLimitAction <%= node[:mod_security][:response_body_limit_action] %>
+SecResponseBodyLimitAction <%= node['mod_security']['response_body_limit_action'] %>
 
 
 # -- Filesystem configuration ------------------------------------------------
@@ -132,13 +132,13 @@ SecResponseBodyLimitAction <%= node[:mod_security][:response_body_limit_action] 
 # This default setting is chosen due to all systems have /tmp available however, 
 # this is less than ideal. It is recommended that you specify a location that's private.
 #
-SecTmpDir <%= node[:mod_security][:tmp_dir] %>
+SecTmpDir <%= node['mod_security']['tmp_dir'] %>
 
 # The location where ModSecurity will keep its persistent data.  This default setting 
 # is chosen due to all systems have /tmp available however, it
 # too should be updated to a place that other users can't access.
 #
-SecDataDir <%= node[:mod_security][:data_dir] %>
+SecDataDir <%= node['mod_security']['data_dir'] %>
 
 
 # -- File uploads handling configuration -------------------------------------
@@ -177,17 +177,17 @@ SecDataDir <%= node[:mod_security][:data_dir] %>
 # trigger a server error (determined by a 5xx or 4xx, excluding 404,  
 # level response status codes).
 #
-SecAuditEngine <%= node[:mod_security][:audit_engine] %>
-SecAuditLogRelevantStatus <%= node[:mod_security][:audit_log_relevant_status] %>
+SecAuditEngine <%= node['mod_security']['audit_engine'] %>
+SecAuditLogRelevantStatus <%= node['mod_security']['audit_log_relevant_status'] %>
 
 # Log everything we know about a transaction.
-SecAuditLogParts <%= node[:mod_security][:audit_log_parts] %>
+SecAuditLogParts <%= node['mod_security']['audit_log_parts'] %>
 
 # Use a single file for logging. This is much easier to look at, but
 # assumes that you will use the audit log only ocassionally.
 #
-SecAuditLogType <%= node[:mod_security][:audit_log_type] %>
-SecAuditLog <%= node[:mod_security][:audit_log] %>
+SecAuditLogType <%= node['mod_security']['audit_log_type'] %>
+SecAuditLog <%= node['mod_security']['audit_log'] %>
 
 # Specify the path for concurrent audit logging.
 #SecAuditLogStorageDir /opt/modsecurity/var/audit/
@@ -199,13 +199,13 @@ SecAuditLog <%= node[:mod_security][:audit_log] %>
 # separator. There's probably only one application somewhere that uses
 # something else so don't expect to change this value.
 #
-SecArgumentSeparator <%= node[:mod_security][:argument_separator] %>
+SecArgumentSeparator <%= node['mod_security']['argument_separator'] %>
 
 # Settle on version 0 (zero) cookies, as that is what most applications
 # use. Using an incorrect cookie version may open your installation to
 # evasion attacks (against the rules that examine named cookies).
 #
-SecCookieFormat <%= node[:mod_security][:cookie_format] %>
+SecCookieFormat <%= node['mod_security']['cookie_format'] %>
 
 # Specify your Unicode Code Point.
 # This mapping is used by the t:urlDecodeUni transformation function
