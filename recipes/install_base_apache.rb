@@ -118,7 +118,7 @@ else
   when 'redhat', 'centos', 'fedora', 'suse'
     package 'mod_security'
   when 'debian'
-    package 'libapache-mod-security'
+    package 'libapache2-mod-security2'
   when 'ubuntu'
     package 'libapache2-modsecurity'
     package 'modsecurity-crs'
