@@ -135,6 +135,19 @@ end
 # setup apache module loading
 apache_module 'unique_id'
 
+# Below fixes config duplication on debian platform
+%w[security2.conf security2.load].each do |file|
+  link "#{node['apache']['dir']}/mods-enabled/#{file}" do
+    action :delete
+    only_if "test -L #{node['apache']['dir']}/mods-enabled/#{file}"
+    notifies :restart, 'service[apache2]', :delayed
+  end
+  file "#{node['apache']['dir']}/mods-available/#{file}" do
+    action :delete
+    notifies :restart, 'service[apache2]', :delayed
+  end
+end
+
 template "#{node['apache']['dir']}/mods-available/mod-security.load" do
   source 'mods/mod-security.load.erb'
   owner 'root'
