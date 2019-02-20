@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # Cookbook Name:: mod_security
 # Recipe:: default
@@ -17,25 +19,16 @@
 # limitations under the License.
 #
 
-if not platform_family?('windows')
-  include_recipe 'apache2'
-end
+include_recipe 'apache2' unless platform_family?('windows')
 
-if node[:mod_security][:install_base] then
-  include_recipe 'mod_security::install_base'
-end
+include_recipe 'mod_security::install_base' if node['mod_security']['install_base']
 
-if node[:mod_security][:install_crs] then
-  include_recipe 'mod_security::install_owasp_core_rule_set'
-end
+include_recipe 'mod_security::install_owasp_core_rule_set' if node['mod_security']['install_crs']
 
-if node[:mod_security][:install_custom] then
-  include_recipe 'mod_security::install_custom_rule_set'
-end
+include_recipe 'mod_security::install_custom_rule_set' if node['mod_security']['install_custom']
 
 if platform_family?('windows')
   execute 'iisreset' do
-  action :nothing
+    action :nothing
   end
 end
-

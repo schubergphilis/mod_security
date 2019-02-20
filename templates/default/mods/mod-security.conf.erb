@@ -1,16 +1,16 @@
 <IfModule security2_module>
-    # Include all the *.conf files in <%= node[:mod_security][:dir] %>.
+    # Include all the *.conf files in <%= node['mod_security']['dir'] %>.
     # Keeping your local configuration in that directory
     # will allow for an easy upgrade of THIS file and
     # make your life easier
-    Include "<%= node[:mod_security][:dir] %>/*.conf"
+    Include "<%= node['mod_security']['dir'] %>/*.conf"
 
     # Wildcard the mod_security settings file so that Apache doesn't break if missing
-    IncludeOptional <%= "#{node[:mod_security][:crs][:rules_root_dir]}/modsecurity_crs_*.conf" %>
+    IncludeOptional <%= "#{node['mod_security']['crs']['rules_root_dir']}/modsecurity_crs_*.conf" %>
 
     # Core rule sets that have been activated
-    IncludeOptional <%= "#{node[:mod_security][:crs][:activated_rules]}/*.conf" %>
+    IncludeOptional <%= "#{node['mod_security']['crs']['activated_rules']}/*.conf" %>
 
     # User crafted rules
-    IncludeOptional <%= "#{node[:mod_security][:rules]}/*.conf" %>
+    IncludeOptional <%= "#{node['mod_security']['rules']}/*.conf" %>
 </IfModule>

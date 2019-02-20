@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-Vagrant.configure("2") do |config|
+Vagrant.configure('2') do |config|
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
@@ -9,11 +11,11 @@ Vagrant.configure("2") do |config|
   config.omnibus.chef_version = :latest
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "opscode-debian-7.2.0"
+  config.vm.box = 'opscode-debian-7.2.0'
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
-  config.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_debian-7.2.0_chef-provisionerless.box"
+  config.vm.box_url = 'http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_debian-7.2.0_chef-provisionerless.box'
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
@@ -22,7 +24,7 @@ Vagrant.configure("2") do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  config.vm.network :private_network, ip: "192.168.33.10"
+  config.vm.network :private_network, ip: '192.168.33.10'
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -44,7 +46,7 @@ Vagrant.configure("2") do |config|
     # vb.gui = true
     #
     # Use VBoxManage to customize the VM. For example to change memory:
-    vb.customize ["modifyvm", :id, "--memory", "2048", "--cpus", "2", "--ioapic", "on"]
+    vb.customize ['modifyvm', :id, '--memory', '2048', '--cpus', '2', '--ioapic', 'on']
   end
   #
   # View the documentation for the provider you're using for more
@@ -66,13 +68,13 @@ Vagrant.configure("2") do |config|
   # end
 
   # Update the list of packages
-  config.vm.provision :shell, :inline => "sudo apt-get update -y"
+  config.vm.provision :shell, inline: 'sudo apt-get update -y'
 
   config.vm.provision :chef_solo do |chef|
-    chef.cookbooks_path = "../../cookbooks"
-    chef.roles_path = "../../roles"
-    chef.data_bags_path = "../../data_bags"
-    chef.add_role "webserver"
+    chef.cookbooks_path = '../../cookbooks'
+    chef.roles_path = '../../roles'
+    chef.data_bags_path = '../../data_bags'
+    chef.add_role 'webserver'
   end
 
   # Enable provisioning with chef server, specifying the chef server URL,

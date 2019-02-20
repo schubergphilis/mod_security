@@ -29,7 +29,7 @@
 
   # SSL settings
   SSLEngine on
-  SSLCertificateFile      <%= node[:mod_security][:dir] %>/ssl/server.crt
-  SSLCertificateKeyFile   <%= node[:mod_security][:dir] %>/ssl/server.key
+  SSLCertificateFile      <%= node['mod_security']['dir'] %>/ssl/server.crt
+  SSLCertificateKeyFile   <%= node['mod_security']['dir'] %>/ssl/server.key
 </VirtualHost>
 <% end %>

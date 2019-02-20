@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 name              'mod_security'
 maintainer        'Schuberg Philis'
 maintainer_email  'fbreedijk@schubergphilis.com'
@@ -12,6 +14,6 @@ depends 'apt'
 depends 'yum'
 depends 'windows'
 
-%w{ redhat centos scientific fedora ubuntu debian windows amazon }.each do |os|
+%w[redhat centos scientific fedora ubuntu debian windows amazon].each do |os|
   supports os
 end

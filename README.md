@@ -3,7 +3,6 @@
 Ever wanted a little guardian angel to protect your chef deployed
 servers from the bad guys?  Like a bad-ass Jiminy Cricket on your
 shoulder?
-
 This package is to make deployment and testing of mod_security easier
 with Chef. Right now it centers entirely around the OWASP Core Rule
 Sets of mod_security rules. In future, it will allow you to manage/deploy
