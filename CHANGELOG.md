@@ -1,6 +1,14 @@
 chef-mod_security
 =================
 
+v0.2.8
+-------------------
+ * Fixed Chef 14 and rubocop warnings
+
+v0.2.7
+-------------------
+ * Updated to install ModSecurityIIS_2.9.1 MSI by default
+
 v0.2.6
 -------------------
  * Fixed a bug that would break the apache server if the WOASP rules were not installed
