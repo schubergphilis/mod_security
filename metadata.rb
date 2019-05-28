@@ -6,7 +6,7 @@ maintainer_email  'fbreedijk@schubergphilis.com'
 license           'Apache 2.0'
 description       'Installs and configures mod_security for Apache2 or IIS'
 long_description  IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version           '0.2.8'
+version           '0.2.9'
 
 depends 'apache2'
 depends 'build-essential'

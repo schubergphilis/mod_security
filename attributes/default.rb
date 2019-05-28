@@ -45,7 +45,7 @@ default['mod_security']['crs']['version'] = '2.2.9'	# Default to the latest vers
 case node['platform_family']
 when 'windows'
   default['mod_security']['crs']['root_dir'] = (node['mod_security']['dir']).to_s
-  default['mod_security']['crs']['rules_root_dir'] = "#{node['mod_security']['crs']['root_dir']}/owasp_crs"
+  default['mod_security']['crs']['rules_root_dir'] = "#{node['mod_security']['dir']}/owasp_crs"
 else
   default['mod_security']['crs']['root_dir'] = "#{node['mod_security']['dir']}/crs"
   default['mod_security']['crs']['rules_root_dir'] = "#{node['mod_security']['crs']['root_dir']}/rules"
