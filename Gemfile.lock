@@ -171,7 +171,7 @@ GEM
     ipaddress (0.8.3)
     jaro_winkler (1.5.1)
     jmespath (1.4.0)
-    json (2.1.0)
+    json (2.3.1)
     jwt (2.1.0)
     kitchen-dokken (2.6.7)
       docker-api (~> 1.33)
